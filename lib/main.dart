@@ -53,6 +53,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 CountryPickerWidget(), // Country picker widget
                 SizedBox(width: 10), // Spacer between country picker and text field
                 Expanded(
+                  flex: 1,
+                  child: TextField(
+                    onChanged: (value) => _handleInputChanged(value, 'phoneNumber'),
+                    decoration: const InputDecoration(
+                      labelText: '+',
+                      hintText: '+',
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10), // Spacer between country picker and text field
+                Expanded(
+                  flex: 3,
                   child: TextField(
                     onChanged: (value) => _handleInputChanged(value, 'phoneNumber'),
                     decoration: const InputDecoration(

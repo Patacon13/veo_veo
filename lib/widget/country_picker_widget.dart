@@ -44,7 +44,7 @@ class _CountryPickerWidgetState extends State<CountryPickerWidget> {
       builder: (context) => CountryPickerDialog(
         titlePadding: EdgeInsets.all(8.0),
         searchCursorColor: Colors.blueAccent,
-        searchInputDecoration: InputDecoration(hintText: 'Buscando...'),
+        searchInputDecoration: InputDecoration(hintText: 'Buscar...'),
         isSearchable: true,
         title: Text('Seleccione su pais'),
         onValuePicked: (Country country) => setState(() {
