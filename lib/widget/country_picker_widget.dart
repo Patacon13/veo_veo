@@ -14,7 +14,7 @@ class _CountryPickerWidgetState extends State<CountryPickerWidget> {
   void initState() {
     super.initState();
     // Initialize the selected country to the user's current country or a default country
-    _selectedCountry = CountryPickerUtils.getCountryByIsoCode('US');
+    _selectedCountry = CountryPickerUtils.getCountryByIsoCode('AR');
   }
 
   @override
@@ -44,9 +44,9 @@ class _CountryPickerWidgetState extends State<CountryPickerWidget> {
       builder: (context) => CountryPickerDialog(
         titlePadding: EdgeInsets.all(8.0),
         searchCursorColor: Colors.blueAccent,
-        searchInputDecoration: InputDecoration(hintText: 'Search...'),
+        searchInputDecoration: InputDecoration(hintText: 'Buscando...'),
         isSearchable: true,
-        title: Text('Select your country'),
+        title: Text('Seleccione su pais'),
         onValuePicked: (Country country) => setState(() {
           _selectedCountry = country;
         }),
