@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:veo_veo/ui/pages/scan_qr/scan_qr.dart';
+import 'package:veo_veo/widget/country_picker_widget.dart';
 
 void main() {
   runApp(MyApp());
@@ -49,13 +50,32 @@ class _MyHomePageState extends State<MyHomePage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10),
-            TextField(
-              onChanged: (value) => _handleInputChanged(value, 'phoneNumber'),
-              decoration: const InputDecoration(
-                labelText: 'Número de teléfono',
-                hintText: 'Introduzca su número',
-              ),
+            Row(
+              children: [
+                CountryPickerWidget(), // Country picker widget
+                SizedBox(width: 10), // Spacer between country picker and text field
+                Expanded(
+                  flex: 1,
+                  child: TextField(
+                    onChanged: (value) => _handleInputChanged(value, 'phoneNumber'),
+                    decoration: const InputDecoration(
+                      labelText: '+',
+                      hintText: '+',
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10), // Spacer between country picker and text field
+                Expanded(
+                  flex: 3,
+                  child: TextField(
+                    onChanged: (value) => _handleInputChanged(value, 'phoneNumber'),
+                    decoration: const InputDecoration(
+                      labelText: 'Número de teléfono',
+                      hintText: 'Introduzca su número',
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20),
             Center(
