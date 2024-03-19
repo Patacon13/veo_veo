@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:veo_veo/ui/pages/scan_qr/scan_qr.dart';
 import 'package:veo_veo/widget/country_picker_widget.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -12,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: QRScannerPage(),
     );
   }
 }
