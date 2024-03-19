@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 
 class QRCheckerBloc {
@@ -20,7 +19,7 @@ class QRCheckerBloc {
   }
 
   void _checkQRText(String qrText) {
-    if (qrText == "http://hola.com") {
+    if (qrText == "texto escaneado") { //deberia consultarse a una API y abrir una nueva ventana que muestre info.
       _resultController.sink.add(true);
     } else {
       _resultController.sink.add(false);

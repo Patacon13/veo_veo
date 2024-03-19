@@ -43,12 +43,12 @@ class _QRScannerPageState extends State<QRScannerPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data == true) {
                 return Text(
-                  'Resultado: QR correcto',
+                  'Resultado: QR Escaneado',
                   style: TextStyle(fontSize: 20, color: Colors.green),
                 );
               } else {
                 return Text(
-                  'Resultado: QR incorrecto',
+                  'Resultado: QR no reeconocido',
                   style: TextStyle(fontSize: 20, color: Colors.red),
                 );
               }
