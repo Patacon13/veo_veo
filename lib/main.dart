@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:veo_veo/ui/pages/login/login.dart';
 import 'package:veo_veo/ui/pages/scan_qr/scan_qr.dart';
 
 void main() {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: QRScannerPage(),
+      home: MyHomePage(),
     );
   }
 }
@@ -24,54 +25,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  void _handleInputChanged(String value, String field) {
-    setState(() {
-
-    });
-  }
+  int _currentIndex = 0;
+  final List<Widget> _pages = [
+    QRScannerPage(),
+    LoginPage(),
+    // Agrega aquí tus otras páginas o pestañas
+    // Ejemplo:
+    // OtherPage1(),
+    // OtherPage2(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Veo Veo'),
+        title: Text('Veo Veo'),
       ),
-      body: Container(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Text(
-              'Bienvenido',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              onChanged: (value) => _handleInputChanged(value, 'phoneNumber'),
-              decoration: const InputDecoration(
-                labelText: 'Número de teléfono',
-                hintText: 'Introduzca su número',
-              ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text('Registrarse/Ingresar'),
-              ),
-            ),
-          ],
-
-        ),
-
+      body: _pages[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt),
+            label: 'Scanear QR',
+          ),
+           BottomNavigationBarItem(
+             icon: Icon(Icons.home),
+             label: 'Home',
+           ),
+        ],
       ),
-
     );
-
   }
-
 }
