@@ -29,10 +29,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _pages = [
     QRScannerPage(),
     LoginPage(),
-    // Agrega aquí tus otras páginas o pestañas
-    // Ejemplo:
-    // OtherPage1(),
-    // OtherPage2(),
   ];
 
   @override
