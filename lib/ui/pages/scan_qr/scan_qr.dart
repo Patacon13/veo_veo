@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:veo_veo/ui/pages/detalle_pto_de_interes/detalle.dart';
+import 'package:veo_veo/ui/pages/login/login.dart';
 import '../../../domain/blocs/qr_scanner_bloc.dart';
 
 class QRScannerPage extends StatefulWidget {
@@ -11,7 +13,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   late QRViewController controller;
   String? result = '';
-  bool isScanning = false;
+  bool isScanning = true; // Iniciamos el escaneo al principio
   late QRCheckerBloc _qrCheckerBloc;
 
   @override
@@ -26,48 +28,26 @@ class _QRScannerPageState extends State<QRScannerPage> {
       appBar: AppBar(
         title: Text('Escanear QR'),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
+          QRView(
+            key: qrKey,
+            onQRViewCreated: _onQRViewCreated,
+            cameraFacing: CameraFacing.back,
+          ),
+          Center(
             child: Container(
-              color: isScanning ? Colors.green : Colors.black,
-              child: QRView(
-                key: qrKey,
-                onQRViewCreated: _onQRViewCreated,
-                cameraFacing: CameraFacing.back,
+              width: 200, // Ancho del cuadro blanco
+              height: 200, // Alto del cuadro blanco
+              decoration: BoxDecoration(
+                border: isScanning? Border.all(color: Colors.white, width: 2.0) : Border.all(color: Colors.green, width: 2.0), // Borde blanco
+                borderRadius: BorderRadius.circular(10.0), // Borde redondeado
+                color: Colors.transparent, // Cambio de color
               ),
             ),
           ),
-          StreamBuilder<bool>(
-            stream: _qrCheckerBloc.resultStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData && snapshot.data == true) {
-                return Text(
-                  'Resultado: QR Escaneado',
-                  style: TextStyle(fontSize: 20, color: Colors.green),
-                );
-              } else {
-                return Text(
-                  'Resultado: QR no reeconocido',
-                  style: TextStyle(fontSize: 20, color: Colors.red),
-                );
-              }
-            },
-          ),
+
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            isScanning = !isScanning;
-            if (isScanning) {
-              controller.resumeCamera();
-            } else {
-              controller.pauseCamera();
-            }
-          });
-        },
-        child: Icon(isScanning ? Icons.stop : Icons.play_arrow),
       ),
     );
   }
@@ -80,6 +60,18 @@ class _QRScannerPageState extends State<QRScannerPage> {
         isScanning = false;
         controller.pauseCamera();
         _qrCheckerBloc.changeQRText(result!);
+      });
+      _qrCheckerBloc.resultStream.listen((isValid) {
+        if (!isValid) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('El código QR no es válido.'),
+          ));
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DetallePage(detalle: 'Puente Colgante')),
+          );
+        }
       });
     });
   }
