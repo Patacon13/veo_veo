@@ -28,7 +28,7 @@ class _DetallePageState extends State<DetallePage> {
           width: double.infinity,
           height: 200,
           color: Colors.grey[300],
-          // child: Image.asset('assets/puente.jpg', fit: BoxFit.cover),
+          child: Image.asset('assets/molino.jpg', fit: BoxFit.cover),
         ),
         SizedBox(height: 16),
         Text(

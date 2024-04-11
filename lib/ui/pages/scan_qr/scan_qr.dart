@@ -69,7 +69,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
         } else {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => DetallePage(detalle: 'Puente Colgante')),
+            MaterialPageRoute(builder: (context) => DetallePage(detalle: 'Molino')),
           );
         }
       });
