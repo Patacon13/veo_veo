@@ -17,42 +17,6 @@ class _LogrosPageState extends State<LogrosPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Card(
-            elevation: 4, // Elevación de la tarjeta para sombra
-            margin: EdgeInsets.all(16),
-            color: Colors.white, // Color de la tarjeta blanco
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage('assets/user.png'), // Aquí deberías proporcionar la ruta de la imagen de perfil
-                      ),
-                      SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Nombre Apellido',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Cantidad de lugares visitados: 1',
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
           Expanded(
             child: Card(
               elevation: 4,
