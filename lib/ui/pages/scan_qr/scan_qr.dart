@@ -13,7 +13,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   late QRViewController controller;
   String? result = '';
-  bool isScanning = true; // Iniciamos el escaneo al principio
+  bool isScanning = true;
   late QRCheckerBloc _qrCheckerBloc;
 
   @override
