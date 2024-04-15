@@ -19,7 +19,7 @@ class QRCheckerBloc {
   }
 
   void _checkQRText(String qrText) {
-    if (qrText == "texto escaneado") { //deberia consultarse a una API y abrir una nueva ventana que muestre info.
+    if (qrText == "molino") { //deberia consultarse a una API y abrir una nueva ventana que muestre info.
       _resultController.sink.add(true);
     } else {
       _resultController.sink.add(false);
