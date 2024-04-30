@@ -1,85 +1,93 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:veo_veo/ui/pages/detalle_pto_de_interes/detalle.dart';
-import 'package:veo_veo/ui/pages/login/login.dart';
-import '../../../domain/blocs/qr_scanner_bloc.dart';
+import 'package:tflite_v2/tflite_v2.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class QRScannerPage extends StatefulWidget {
+class ScanQRPage extends StatefulWidget {
   @override
-  _QRScannerPageState createState() => _QRScannerPageState();
+  _ScanQRPageState createState() => _ScanQRPageState();
 }
 
-class _QRScannerPageState extends State<QRScannerPage> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  late QRViewController controller;
-  String? result = '';
-  bool isScanning = true;
-  late QRCheckerBloc _qrCheckerBloc;
-
+class _ScanQRPageState extends State<ScanQRPage> {
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
+  File? file;
+  var _recognitions;
+  var v = "";
+  // var dataList = [];
   @override
   void initState() {
     super.initState();
-    _qrCheckerBloc = QRCheckerBloc();
+    loadmodel().then((value) {
+      setState(() {});
+    });
+  }
+
+  loadmodel() async {
+    await Tflite.loadModel(
+      model: "assets/bridge_model.tflite",
+      labels: "assets/labels.txt",
+    );
+  }
+
+  Future<void> _pickImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      setState(() {
+        _image = image;
+        file = File(image!.path);
+      });
+      detectimage(file!);
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+  }
+
+  Future detectimage(File image) async {
+    int startTime = new DateTime.now().millisecondsSinceEpoch;
+    var recognitions = await Tflite.runModelOnImage(
+      path: image.path,
+      numResults: 1
+    );
+
+    setState(() {
+      print(recognitions);
+      _recognitions = recognitions;
+    });
+    print("//////////////////////////////////////////////////");
+    print(_recognitions);
+    // print(dataList);
+    print("//////////////////////////////////////////////////");
+    int endTime = new DateTime.now().millisecondsSinceEpoch;
+    print("Inference took ${endTime - startTime}ms");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Escanear QR'),
-      ),
-      body: Stack(
-        children: [
-          QRView(
-            key: qrKey,
-            onQRViewCreated: _onQRViewCreated,
-            cameraFacing: CameraFacing.back,
-          ),
-          Center(
-            child: Container(
-              width: 200, // Ancho del cuadro blanco
-              height: 200, // Alto del cuadro blanco
-              decoration: BoxDecoration(
-                border: isScanning? Border.all(color: Colors.white, width: 2.0) : Border.all(color: Colors.green, width: 2.0), // Borde blanco
-                borderRadius: BorderRadius.circular(10.0), // Borde redondeado
-                color: Colors.transparent, // Cambio de color
-              ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            if (_image != null)
+              Image.file(
+                File(_image!.path),
+                height: 200,
+                width: 200,
+                fit: BoxFit.cover,
+              )
+            else
+              Text('No image selected'),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _pickImage,
+              child: Text('Pick Image from Gallery'),
             ),
-          ),
-
-        ],
+            SizedBox(height: 20),
+            Text(v),
+          ],
+        ),
       ),
     );
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData.code;
-        isScanning = false;
-        controller.pauseCamera();
-        _qrCheckerBloc.changeQRText(result!);
-      });
-      _qrCheckerBloc.resultStream.listen((isValid) {
-        if (!isValid) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('El código QR no es válido.'),
-          ));
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => DetallePage(detalle: 'Molino')),
-          );
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    _qrCheckerBloc.dispose();
-    super.dispose();
   }
 }
