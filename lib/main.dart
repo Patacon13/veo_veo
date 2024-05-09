@@ -3,13 +3,21 @@ import 'package:veo_veo/ui/pages/login/login.dart';
 import 'package:veo_veo/ui/pages/logros/logros.dart';
 import 'package:veo_veo/ui/pages/mapa/mapa.dart';
 import 'package:veo_veo/ui/pages/perfil/perfil.dart';
-import 'package:veo_veo/ui/pages/scan_qr/scan_qr.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(VeoVeo());
 }
 
-class MyApp extends StatelessWidget {
+/*
+  EL QUE DEBE USAR LOS CONTROLADORES ES CADA ENTIDAD, LUEGO DESDE LA GUI SE LLAMA A LA ENTIDAD.
+*/
+
+class VeoVeo extends StatelessWidget {
+  bool logueado = true;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,17 +25,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+        home: logueado ? HomePage() : LoginPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     LogrosPage(),

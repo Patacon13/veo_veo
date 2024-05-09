@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "450369290921",
+    "project_id": "veo-veo-9d124",
+    "storage_bucket": "veo-veo-9d124.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:450369290921:android:d1d2923f8a5067d0d9dfb8",
+        "android_client_info": {
+          "package_name": "com.example.veo_veo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJuTKUje11_IMnz44KAr855w9xXUb0t0M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

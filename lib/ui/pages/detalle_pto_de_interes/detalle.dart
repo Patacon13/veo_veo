@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:veo_veo/domain/entities/punto_de_interes.dart';
 
 class DetallePage extends StatefulWidget {
-  final String? detalle;
+  final PuntoDeInteres? detalle;
   DetallePage({Key? key, this.detalle}) : super(key: key);
   @override
   _DetallePageState createState() => _DetallePageState();
@@ -12,12 +12,12 @@ class _DetallePageState extends State<DetallePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalle ' + (widget.detalle ?? '')),
+        title: Text('Detalle ' + (widget.detalle?.nombre ?? '')),
       ),
       body:  Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text((widget.detalle ?? ''),
+        Text((widget.detalle?.nombre ?? ''),
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -28,18 +28,12 @@ class _DetallePageState extends State<DetallePage> {
           width: double.infinity,
           height: 200,
           color: Colors.grey[300],
-          child: Image.asset('assets/molino.jpg', fit: BoxFit.cover),
+          child: Image.network(widget.detalle!.portada, fit: BoxFit.cover),
         ),
         SizedBox(height: 16),
-        Text(
-          'Descripción del Punto Turístico',
-          style: TextStyle(
-            fontSize: 18,
-          ),
-        ),
         SizedBox(height: 8),
-        const Text(
-          'Descripción detallada del punto turístico, incluyendo historia, características y cualquier otra información relevante.',
+        Text(
+          widget.detalle!.descripcion,
           style: TextStyle(
             fontSize: 16,
           ),
