@@ -54,4 +54,18 @@ Future<DocumentSnapshot<Object?>?> getUsuario(String id) async {
   }
 }
 
-}
+Future<void> registrarLogro(String idUsuario, String idPuntoDeInteres) async {
+    try {
+      DocumentReference userRef = FirebaseFirestore.instance.collection('usuarios').doc(idUsuario);
+      DocumentReference pointOfInterestRef = FirebaseFirestore.instance.doc('/puntos_de_interes/$idPuntoDeInteres');
+      await userRef.update({
+        'logros': FieldValue.arrayUnion([pointOfInterestRef]),
+      });
+      print('Logro registrado con éxito para el usuario $idUsuario');
+    } catch (e) {
+      print('Error al registrar el logro: $e');
+    }
+  }
+
+
+  }

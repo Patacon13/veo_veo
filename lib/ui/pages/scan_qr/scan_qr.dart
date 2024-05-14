@@ -1,91 +1,59 @@
-import 'package:flutter/material.dart';
-import 'package:tflite_v2/tflite_v2.dart';
-import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:veo_veo/domain/entities/usuario.dart';
+import 'package:veo_veo/main.dart';
 
-class ScanQRPage extends StatefulWidget {
-  @override
-  _ScanQRPageState createState() => _ScanQRPageState();
+Future<dynamic> compareImages(File imageFile) async {
+  final url = 'http://192.168.100.4:5000/compare_images';
+  String base64Image = base64Encode(imageFile.readAsBytesSync());
+
+  final response = await http.post(Uri.parse(url), body: {
+    'image1': 'data:image/jpeg;base64,$base64Image',
+  });
+
+  if (response.statusCode == 200) {
+    final jsonResponse = json.decode(response.body);
+    return jsonResponse;
+  } else {
+    throw Exception('Fallo de conexión con el servidor.');
+  }
 }
 
-class _ScanQRPageState extends State<ScanQRPage> {
+class ImageCaptureScreen extends StatelessWidget {
   final ImagePicker _picker = ImagePicker();
-  XFile? _image;
-  File? file;
-  var _recognitions;
-  var v = "";
-  // var dataList = [];
-  @override
-  void initState() {
-    super.initState();
-    loadmodel().then((value) {
-      setState(() {});
-    });
-  }
 
-  loadmodel() async {
-    await Tflite.loadModel(
-      model: "assets/bridge_model.tflite",
-      labels: "assets/labels.txt",
-    );
-  }
-
-  Future<void> _pickImage() async {
-    try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      setState(() {
-        _image = image;
-        file = File(image!.path);
-      });
-      detectimage(file!);
-    } catch (e) {
-      print('Error picking image: $e');
+  Future<void> _captureImage(BuildContext context) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      File imageFile = File(image.path);
+      dynamic response = await compareImages(imageFile);
+      dynamic score = response['similarity_score'];
+      dynamic punto = response['best_match_id'];
+      if(score > 0.05){
+        print('Score: $score con el punto $punto');
+        Usuario usuario = await Usuario.fromId("1");
+        await usuario.registrarLogro(punto);
+          Navigator.pushReplacement(
+          context,
+           MaterialPageRoute(builder: (context) => HomePage()),
+        );     
+   } else {
+        print('No se encontró coincidencia.');
+      }
     }
-  }
-
-  Future detectimage(File image) async {
-    int startTime = new DateTime.now().millisecondsSinceEpoch;
-    var recognitions = await Tflite.runModelOnImage(
-      path: image.path,
-      numResults: 1
-    );
-
-    setState(() {
-      print(recognitions);
-      _recognitions = recognitions;
-    });
-    print("//////////////////////////////////////////////////");
-    print(_recognitions);
-    // print(dataList);
-    print("//////////////////////////////////////////////////");
-    int endTime = new DateTime.now().millisecondsSinceEpoch;
-    print("Inference took ${endTime - startTime}ms");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Capturar imagen')),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            if (_image != null)
-              Image.file(
-                File(_image!.path),
-                height: 200,
-                width: 200,
-                fit: BoxFit.cover,
-              )
-            else
-              Text('No image selected'),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _pickImage,
-              child: Text('Pick Image from Gallery'),
-            ),
-            SizedBox(height: 20),
-            Text(v),
-          ],
+        child: ElevatedButton(
+          onPressed: () => _captureImage(context),
+          child: Text('Capturar imagen'),
         ),
       ),
     );

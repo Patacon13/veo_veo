@@ -40,5 +40,10 @@ class Usuario {
     return usuarioController.obtenerLogrosUsuario(id);
   }
 
+  Future<void> registrarLogro(punto) async {
+    UsuarioController controller = UsuarioController();
+    await controller.registrarLogro(id, punto);
+  }
+
   
 }
