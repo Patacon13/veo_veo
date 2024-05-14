@@ -25,4 +25,16 @@ Future<DocumentSnapshot<Object?>?> getPuntoDeInteres(String id) async {
 }
 
 
+Future<List<DocumentSnapshot<Object?>>?> getPuntosDeInteres() async {
+  try {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('puntos_de_interes')
+        .get();
+    return snapshot.docs;
+  } catch (e) {
+     return null;
+  }
+}
+
+
 }

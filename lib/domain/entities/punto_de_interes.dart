@@ -35,4 +35,7 @@ static PuntoDeInteres fromSnaphost(DocumentSnapshot snapshot){
         data['descripcion'].toString()
       );
 }
+
+
+
 }

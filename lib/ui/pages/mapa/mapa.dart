@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:veo_veo/domain/controllers/punto_de_interes_controller.dart';
 import 'package:veo_veo/ui/pages/scan_qr/scan_qr.dart';
 import 'package:location/location.dart';
 import 'dart:math' show asin, cos, min, sqrt;
@@ -14,15 +16,14 @@ class _MapaPageState extends State<MapaPage> {
   late GoogleMapController mapController;
   Location location = Location();
   bool scannerEnabled = false; // Estado del botón de escáner QR
-  List<LatLng> coordenadas = [
-    LatLng(40.7128, -74.0060),
-    LatLng(34.0522, -118.2437),
-  ];
+  List<LatLng> coordenadas = [];
+
 
   @override
   void initState() {
     super.initState();
     _obtenerUbicacionActual();
+    _cargarCoordenadasPuntosDeInteres();
   }
 
   void _obtenerUbicacionActual() async {
@@ -49,11 +50,28 @@ class _MapaPageState extends State<MapaPage> {
       }
 
       setState(() {
-        scannerEnabled = distanciaMinima >= 20.0;
+        scannerEnabled = distanciaMinima <= 0.05; //se habilita si está a menos e 50 metros
       });
 
     } catch (e) {
       print('Error al obtener la ubicación: $e');
+    }
+  }
+
+  Future<void> _cargarCoordenadasPuntosDeInteres() async {
+    PuntoDeInteresController controller = new PuntoDeInteresController();
+    List<DocumentSnapshot<Object?>>? documentos = await controller.getPuntosDeInteres();
+    if (documentos != null) {
+      List<LatLng> nuevasCoordenadas = [];
+      for (var doc in documentos) {
+        GeoPoint geoPoint = doc.get('ubicacion');
+        LatLng latLng = LatLng(geoPoint.latitude, geoPoint.longitude);
+        nuevasCoordenadas.add(latLng);
+      }
+      setState(() {
+        coordenadas = nuevasCoordenadas;
+        print(coordenadas);
+      });
     }
   }
 
@@ -93,7 +111,7 @@ class _MapaPageState extends State<MapaPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ScanQRPage()));
+                          builder: (context) => ImageCaptureScreen()));
                 }
                     : null,
                 child: const Icon(Icons.camera),
