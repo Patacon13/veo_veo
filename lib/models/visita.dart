@@ -1,5 +1,5 @@
-import 'package:veo_veo/domain/entities/punto_de_interes.dart';
-import 'package:veo_veo/domain/entities/usuario.dart';
+import 'package:veo_veo/models/punto_de_interes.dart';
+import 'package:veo_veo/models/usuario.dart';
 
 class Visita {
   DateTime fecha;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:veo_veo/domain/entities/usuario.dart';
-import 'package:veo_veo/ui/pages/detalle_pto_de_interes/detalle.dart';
+import 'package:veo_veo/models/usuario.dart';
+import 'package:veo_veo/screens/pages/detalle_pto_de_interes/detalle.dart';
 
 class LogrosPage extends StatefulWidget {
   @override
@@ -17,8 +17,6 @@ class _LogrosPageState extends State<LogrosPage> {
     logueado =  Usuario.fromId("1");
 
   }
-
-
 
 @override
 Widget build(BuildContext context) {
@@ -38,14 +36,14 @@ Widget build(BuildContext context) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(child: Text('Error al obtener el usuario.'));
                 } else {
                   final usuario = snapshot.data as Usuario; 
                   return StreamBuilder(
                     stream: usuario.obtenerLogrosUsuario(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        return Center(child: Text('Error Aca: ${snapshot.error}'));
+                        return Center(child: Text('Ocurrio un error al obtener los logros.'));
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());

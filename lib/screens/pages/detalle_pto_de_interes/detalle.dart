@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:veo_veo/domain/entities/punto_de_interes.dart';
+import 'package:veo_veo/models/punto_de_interes.dart';
 
 class DetallePage extends StatefulWidget {
   final PuntoDeInteres? detalle;
