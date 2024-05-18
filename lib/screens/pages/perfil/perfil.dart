@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:veo_veo/domain/entities/usuario.dart';
+import 'package:veo_veo/models/usuario.dart';
 
 class PerfilPage extends StatefulWidget {
   @override

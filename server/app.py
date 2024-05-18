@@ -55,15 +55,15 @@ def compare_images(image_path1, reference_images):
 
     return best_match_id, max_similarity
 
-# Crear un diccionario de imágenes de referencia con sus identificadores
-reference_images = {'1': (keypoints2, descriptors2), '2': (keypoints3, descriptors3)}
 
-@app.route('/compare_images', methods=['POST'])
+diccionario = {'1': (keypoints2, descriptors2), '2': (keypoints3, descriptors3)}
+
+@app.route('/procesar', methods=['POST'])
 def compare_images_route():
-    image1 = request.form['image1']
-    best_match_id, similarity_score = compare_images(image1, reference_images)
-    print("coincidió con: " + best_match_id + " con " + str(similarity_score))
-    return jsonify({'best_match_id': best_match_id, 'similarity_score': similarity_score})
+    imagen = request.form['imagen']
+    punto_id, score = compare_images(imagen, diccionario)
+    print("coincidió con: " + punto_id + " con " + str(score))
+    return jsonify({'punto': punto_id, 'coincidencia': score})
 
 if __name__ == '__main__':
     app.run(debug=True)

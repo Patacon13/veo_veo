@@ -1,11 +1,10 @@
 // firestore_controller.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../entities/punto_de_interes.dart';
+import '../models/punto_de_interes.dart';
 
 
-class PuntoDeInteresController {
-  final CollectionReference puntosDeInteresColeccion=
-      FirebaseFirestore.instance.collection('puntos_de_interes');
+class PuntoDeInteresService {
+  final CollectionReference puntosDeInteresColeccion= FirebaseFirestore.instance.collection('puntos_de_interes');
 
   Future<void> agregarPunto(PuntoDeInteres puntoDeInteres) async {
     await puntosDeInteresColeccion.add({
@@ -20,7 +19,7 @@ Future<DocumentSnapshot<Object?>?> getPuntoDeInteres(String id) async {
         .get();
     return snapshot;
   } catch (e) {
-     return null;
+     throw Exception('Error al obtener punto de interes.');
   }
 }
 
@@ -32,7 +31,7 @@ Future<List<DocumentSnapshot<Object?>>?> getPuntosDeInteres() async {
         .get();
     return snapshot.docs;
   } catch (e) {
-     return null;
+     throw Exception('Error al obtener todos los puntos de interes');
   }
 }
 

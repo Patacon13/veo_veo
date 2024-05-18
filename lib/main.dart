@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:veo_veo/ui/pages/login/login.dart';
-import 'package:veo_veo/ui/pages/logros/logros.dart';
-import 'package:veo_veo/ui/pages/mapa/mapa.dart';
-import 'package:veo_veo/ui/pages/perfil/perfil.dart';
+import 'package:veo_veo/screens/pages/login/login.dart';
+import 'package:veo_veo/screens/pages/logros/logros.dart';
+import 'package:veo_veo/screens/pages/mapa/mapa.dart';
+import 'package:veo_veo/screens/pages/perfil/perfil.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:veo_veo/screens/pages/scan/scan.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -12,9 +13,6 @@ await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(VeoVeo());
 }
 
-/*
-  EL QUE DEBE USAR LOS CONTROLADORES ES CADA ENTIDAD, LUEGO DESDE LA GUI SE LLAMA A LA ENTIDAD.
-*/
 
 class VeoVeo extends StatelessWidget {
   bool logueado = true;
@@ -39,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     LogrosPage(),
-    MapaPage(),
+    ScanPage(),
     PerfilPage(),
   ];
 
