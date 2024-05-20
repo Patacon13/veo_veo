@@ -11,7 +11,7 @@ class ScanPage extends StatefulWidget {
 class _ScanPageState extends State<ScanPage> {
   final ScanBloc bloc = ScanBloc();
   CameraController? _cameraController;
-  late Future<void> _initializeControllerFuture;
+  Future<void>? _initializeControllerFuture;
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _ScanPageState extends State<ScanPage> {
     );
 
     _initializeControllerFuture = _cameraController!.initialize();
-    _initializeControllerFuture.then((_) {
+    _initializeControllerFuture!.then((_) {
       if (mounted) {
         setState(() {});
       }
@@ -65,7 +65,7 @@ class _ScanPageState extends State<ScanPage> {
               if (snapshot.connectionState == ConnectionState.done) {
                 return CameraPreview(_cameraController!);
               } else {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
             },
           ),

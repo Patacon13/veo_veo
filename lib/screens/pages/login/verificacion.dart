@@ -1,42 +1,44 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:veo_veo/main.dart';
 import 'package:veo_veo/screens/pages/login/bloc/login_bloc.dart';
-import 'package:veo_veo/screens/pages/login/verificacion.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
 
-class LoginPage extends StatefulWidget {
+
+class VerificacionPage extends StatefulWidget {
+  final String codigo;
+  final LoginBloc bloc;
+
+  VerificacionPage({Key? key, required this.codigo, required this.bloc}) : super(key: key);
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _VerificacionPageState createState() => _VerificacionPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  String _telefono = '';
-  final LoginBloc _bloc = LoginBloc();
+class _VerificacionPageState extends State<VerificacionPage> {
+  String _codigo = '';
 
   void _handleInputChanged(String value) {
     setState(() {
-      _telefono = value;
+      _codigo = value;
     });
+  }
+
+  @override
+  void dispose() {
+    widget.bloc.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Veo Veo'),
       ),
       body: BlocProvider(
-        create: (context) => _bloc,
+        create: (context) => widget.bloc,
         child: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
-            if (state is EsperandoCodigo) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => VerificacionPage(codigo: state.idVerificacion, bloc: _bloc)),
-              );
-            }
            if (state is LoginExitoso) {
               Navigator.push(
                 context,
@@ -55,10 +57,9 @@ class _LoginPageState extends State<LoginPage> {
               return Container(
                 padding: EdgeInsets.all(20),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     const Text(
-                      'Bienvenido',
+                      'Por favor, introduzca el código recibido por SMS',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -66,34 +67,37 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 10),
                     TextField(
-                      onChanged: (value) => _handleInputChanged(value),
+                      onChanged: _handleInputChanged,
                       decoration: const InputDecoration(
-                        labelText: 'Número de teléfono',
-                        hintText: 'Introduzca su número',
+                        labelText: 'Código',
+                        hintText: 'Introduzca el código',
                       ),
                     ),
                     SizedBox(height: 20),
-                    if (state is ErrorOcurrido) 
-                      const Text(
-                        'Ocurrió un error, intente más tarde',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    if (state is NumeroInvalido)
-                      const Text(
-                        'Número de teléfono inválido',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    if (state is Cargando)
-                      const Center(child: CircularProgressIndicator()),
-                    const SizedBox(height: 20),
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
-                          _bloc.add(LoginIniciado(nroTelefono: _telefono));
+                          widget.bloc.add(CodigoVerificacionIngresado(
+                            codigoSMS: _codigo,
+                            idVerificacion: widget.codigo,
+                          ));
                         },
-                        child: Text('Registrarse/Ingresar'),
+                        child: Text('Enviar'),
                       ),
                     ),
+                    SizedBox(height: 20),
+                    if (state is Cargando) ...[
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ] else if (state is CodigoIncorrecto) ...[
+                      const Center(
+                        child: Text(
+                          'El código ingresado es incorrecto. Proba nuevamente.',
+                          style: TextStyle(color: Colors.red, fontSize: 16),
+                        ),
+                      ),
+                    ] 
                   ],
                 ),
               );
