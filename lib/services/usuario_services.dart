@@ -76,5 +76,33 @@ Future<bool> registrarLogro(String idUsuario, String idPuntoDeInteres) async {
     }
   }
 
+agregarUsuarioInicial(String uid) async {
+  try {
+    // Mapa con campos vacíos
+    Map<String, dynamic> data = {
+      'nombre': '',
+      'apellido': '',
+      'numeroTelefono': '',
+      'provincia': '',
+      'localidad': '',
+      'email': '',
+      'regCompletado': false,
+    };
+    await usuariosColeccion.doc(uid).set(data);
+  } catch (e) {
+    throw Exception('Error al agregar usuario: $e');
+  }
+}
+
+  completarRegistro(Usuario? user) {}
+
+
+
+
+
+
+
+
+
 
   }

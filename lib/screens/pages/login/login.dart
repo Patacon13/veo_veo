@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:veo_veo/main.dart';
+import 'package:provider/provider.dart';
+import 'package:veo_veo/providers/user_provider.dart';
+import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/login/bloc/login_bloc.dart';
 import 'package:veo_veo/screens/pages/login/verificacion.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
@@ -23,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    _bloc.userProvider = Provider.of<UsuarioManager>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),

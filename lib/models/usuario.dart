@@ -22,7 +22,7 @@ class Usuario {
         snapshot.id,
         data['nombre'] ?? '',
         data['apellido'] ?? '',
-        data['telefono'] ?? '',
+        data['numeroTelefono'] ?? '',
         data['provincia'] ?? '',
         data['localidad'] ?? '',
         data['email'] ?? '',
@@ -32,12 +32,41 @@ class Usuario {
     }
   }
 
+    Map<String, dynamic> toJson() {
+    final Map<String, dynamic> user = Map<String, dynamic>();
+    user["id"] = id;
+    user["nombre"] = nombre;
+    user["apellido"] = apellido;
+    user["numeroTelefono"] = numeroTelefono;
+    user["provincia"] = provincia;
+    user["localidad"] = localidad;
+    user["email"] = email;
+    return user;
+  }
+
+  static Usuario fromJson(Map<String, dynamic> json) {
+    return Usuario(
+      json["id"] ?? '',
+      json["nombre"] ?? '',
+      json["apellido"] ?? '',
+      json["numeroTelefono"] ?? '',
+      json["provincia"] ?? '',
+      json["localidad"] ?? '',
+      json["email"] ?? '',
+    );
+  }
+
+
   Stream<List<PuntoDeInteres>> obtenerLogrosUsuario(){
     return service.obtenerLogrosUsuario(id);
   }
 
   Future<bool> registrarLogro(punto) async {
     return await service.registrarLogro(id, punto);
+  }
+
+  static registrarInicial(String uid) async {
+    return await service.agregarUsuarioInicial(uid);
   }
 
   
