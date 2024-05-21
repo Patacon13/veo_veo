@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
+
+import 'package:veo_veo/models/usuario.dart';
+import 'package:veo_veo/providers/user_provider.dart';
 
 class PerfilConfigPage extends StatefulWidget {
   @override
@@ -24,13 +28,16 @@ class _PerfilConfigPageState extends State<PerfilConfigPage> {
   }
 
   void _submit() {
+    final userProvider = Provider.of<UsuarioManager>(context);
     if (_formKey.currentState!.validate()) {
       final nombre = _nombreController.text;
       final apellido = _apellidoController.text;
       final ciudad = _ciudadController.text;
-      //Aca hay que llamar al bloc para guardar los dato
+      Usuario rec = Usuario('', nombre, apellido, '', '', ciudad, ''); //deberia ser un bloc, no hacerlo directamente en
+      userProvider.completarRegistro(rec);  
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

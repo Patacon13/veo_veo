@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:veo_veo/main.dart';
+import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/login/bloc/login_bloc.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
 

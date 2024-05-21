@@ -1,15 +1,24 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:veo_veo/models/usuario.dart';
+import 'package:veo_veo/providers/user_provider.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   FirebaseAuth auth = FirebaseAuth.instance;
+  late UsuarioManager _userProvider;
+
+
   LoginBloc() : super(LoginInicial()) {
     on<LoginIniciado>(_onLoginIniciado);
     on<CodigoVerificacionIngresado>(_onCodigoVerificacionIngresado);
+  }
+
+  set userProvider(UsuarioManager provider){
+    _userProvider = provider;
   }
 
 Future<void> _onLoginIniciado(LoginIniciado event, Emitter<LoginState> emit) async {
@@ -66,13 +75,17 @@ Future<void> _onLoginIniciado(LoginIniciado event, Emitter<LoginState> emit) asy
       PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: idVerificacion, smsCode: codigoSMS);
       final user = await auth.signInWithCredential(credential);
       if(user.additionalUserInfo!.isNewUser){
+        await _userProvider.registrar(user.user!.uid);
         emit(RegistroExitoso());
       } else {
+        await _userProvider.loguear(user.user!.uid); //deberia ir if para emitir LoginExitoso o RegistroExitoso si el usuario tiene o no completado el reg.
         emit(LoginExitoso());
       }
     } catch (e) {
       emit(CodigoIncorrecto());
     }
+    print('estado: $state');
+
   }
 
 }
