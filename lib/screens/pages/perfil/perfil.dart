@@ -1,77 +1,102 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:veo_veo/models/usuario.dart';
-import 'package:veo_veo/providers/user_provider.dart'; // Importa tu UserProvider
+import 'package:veo_veo/providers/user_provider.dart';
 
 class PerfilPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body: Container(
-        color: Colors.grey[200],
-        child: Consumer<UsuarioManager>(
-          builder: (context, userProvider, _) {
-            final usuario = userProvider.user;
-            if (usuario == null) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return _buildProfile(usuario, context);
-            }
-          },
+
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              _buildProfile(context),
+              const SizedBox(height: 20),
+              _buildProfileDetails(context),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildProfile(Usuario usuario, BuildContext context) {
+  Widget _buildProfile(BuildContext context) {
+    final userProvider = Provider.of<UsuarioManager>(context, listen: false);
+    Usuario? usuario = userProvider.user;
     return GestureDetector(
       onTap: () {
-        _mostrarFotoAmpliada(usuario, context);
+        _mostrarFotoAmpliada(usuario!, context);
       },
       child: Card(
-        elevation: 4,
-        margin: EdgeInsets.all(16),
-        color: Colors.white,
+        elevation: 10,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
-                radius: 30,
-                backgroundImage: AssetImage('assets/user.png'),
+                radius: 50,
+                backgroundImage: NetworkImage(usuario!.urlPerfil),
               ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${usuario.nombre} ${usuario.apellido}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+              const SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${usuario.nombre} ${usuario.apellido}',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
-                      'Correo electrónico: ${usuario.email}',
-                    ),
-                    Text(
-                      'Teléfono: ${usuario.numeroTelefono}',
-                    ),
-                    Text(
-                      'Ciudad: ${usuario.localidad}',
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileDetails(BuildContext context) {
+    final userProvider1 = Provider.of<UsuarioManager>(context, listen: false);
+    Usuario? usuario = userProvider1.user;
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Detalles del Perfil',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal,
+              ),
+            ),
+            const Divider(color: Colors.teal),
+            ListTile(
+              leading: const Icon(Icons.phone, color: Colors.teal),
+              title: const Text('Teléfono'),
+              subtitle: Text(usuario!.numeroTelefono),
+            ),
+            ListTile(
+              leading: const Icon(Icons.location_city, color: Colors.teal),
+              title: const Text('Ciudad'),
+              subtitle: Text(usuario.localidad),
+            ),
+          ],
         ),
       ),
     );
@@ -82,12 +107,19 @@ class PerfilPage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           content: CircleAvatar(
             radius: 100,
-            backgroundImage: AssetImage('assets/user.png'),
+            backgroundImage: NetworkImage(usuario.urlPerfil),
           ),
         );
       },
     );
   }
 }
+
+
+
+

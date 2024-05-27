@@ -12,5 +12,6 @@ final class LoginIniciado extends LoginEvent{
 final class CodigoVerificacionIngresado extends LoginEvent{
   late final String codigoSMS;
   late final String idVerificacion;
-  CodigoVerificacionIngresado({required this.codigoSMS, required this.idVerificacion});
+  late final String telefono;
+  CodigoVerificacionIngresado({required this.codigoSMS, required this.idVerificacion, required this.telefono});
 }

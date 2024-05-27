@@ -20,5 +20,6 @@ final class Cargando extends LoginState{}
 
 final class EsperandoCodigo extends LoginState{
   String idVerificacion;
-  EsperandoCodigo({required this.idVerificacion});
+  String telefono;
+  EsperandoCodigo({required this.idVerificacion, required this.telefono});
 }

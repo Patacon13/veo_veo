@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+//ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
             if (state is EsperandoCodigo) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => VerificacionPage(codigo: state.idVerificacion, bloc: _bloc)),
+                MaterialPageRoute(builder: (context) => VerificacionPage(codigo: state.idVerificacion, bloc: _bloc, telefono: state.telefono)),
               );
             }
            if (state is LoginExitoso) {
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
           child: BlocBuilder<LoginBloc, LoginState>(
             builder: (context, state) {
               return Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -67,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextField(
                       onChanged: (value) => _handleInputChanged(value),
                       decoration: const InputDecoration(
@@ -75,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: 'Introduzca su número',
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     if (state is ErrorOcurrido) 
                       const Text(
                         'Ocurrió un error, intente más tarde',
@@ -94,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {
                           _bloc.add(LoginIniciado(nroTelefono: _telefono));
                         },
-                        child: Text('Registrarse/Ingresar'),
+                        child: const Text('Registrarse/Ingresar'),
                       ),
                     ),
                   ],

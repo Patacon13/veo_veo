@@ -39,6 +39,7 @@ class Wrapper extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData && snapshot.data == true) {
+          print('ID: ${userProvider.user!.id}');
           return HomePage();
         } else {
           return LoginPage();

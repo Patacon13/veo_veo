@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:veo_veo/providers/user_provider.dart';
 import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/login/bloc/login_bloc.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
@@ -8,8 +10,9 @@ import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
 class VerificacionPage extends StatefulWidget {
   final String codigo;
   final LoginBloc bloc;
+  final String telefono;
 
-  VerificacionPage({Key? key, required this.codigo, required this.bloc}) : super(key: key);
+  VerificacionPage({Key? key, required this.codigo, required this.bloc, required this.telefono}) : super(key: key);
   @override
   _VerificacionPageState createState() => _VerificacionPageState();
 }
@@ -42,13 +45,23 @@ class _VerificacionPageState extends State<VerificacionPage> {
            if (state is LoginExitoso) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(
+                  builder: (context) => ChangeNotifierProvider.value(
+                    value: Provider.of<UsuarioManager>(context, listen: false),
+                    child: HomePage(),
+                  ),
+                ),
               );
             }
-          else if (state is RegistroExitoso) {
+           else if (state is RegistroExitoso) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PerfilConfigPage()),
+                MaterialPageRoute(
+                  builder: (context) => ChangeNotifierProvider.value(
+                    value: Provider.of<UsuarioManager>(context, listen: false),
+                    child: PerfilConfigPage(),
+                  ),
+                ),
               );
             }
           },
@@ -80,6 +93,7 @@ class _VerificacionPageState extends State<VerificacionPage> {
                           widget.bloc.add(CodigoVerificacionIngresado(
                             codigoSMS: _codigo,
                             idVerificacion: widget.codigo,
+                            telefono: widget.telefono,
                           ));
                         },
                         child: Text('Enviar'),

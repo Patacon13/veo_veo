@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:veo_veo/services/usuario_services.dart';
@@ -10,6 +12,9 @@ class UsuarioManager extends ChangeNotifier {
   Usuario? _user;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Usuario? get user => _user;
+  User? get firestoreUser => _auth.currentUser;
+
+//Puede ser que se cree una instancia del service en el constructor
 
   Stream<User?> get usuarioStateChanges => _auth.authStateChanges();
 
@@ -20,19 +25,29 @@ class UsuarioManager extends ChangeNotifier {
       notifyListeners();
   }
 
-  Future<void> registrar(String uid) async {
-      await Usuario.registrarInicial(uid);  //se debe llamar al service no al usuario
+  Future<void> registrar(String uid, String telefono) async {
+      await Usuario.registrarInicial(uid, telefono);  //se debe llamar al service no al usuario
       loguear(uid);
   }
 
-  Future<void> completarRegistro(Usuario rec) async {
+  Future<void> completarRegistro(Usuario rec, File? image) async {
     rec.id = _user!.id;
+    if(image != null){
+        String url = await actualizarFotoPerfil(image);
+        rec.urlPerfil = url;
+    } else {
+        rec.urlPerfil = _user!.urlPerfil; 
+    }
     await UsuarioService().completarRegistro(rec);
-    await SessionManager().set("usuario", _user);
+    _user = rec;
+    await SessionManager().set("usuario", rec);
     await SessionManager().update();
+    notifyListeners();
   }
 
-
+  Future<String> actualizarFotoPerfil(File imagen){
+    return UsuarioService().actualizarFotoPerfil(imagen, _user!.id);
+  }
 
   Future<bool> crearSesion() async {
     if(await SessionManager().containsKey("usuario")){
