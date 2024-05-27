@@ -1,30 +1,17 @@
 //usuario_service.dart
 
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:veo_veo/models/punto_de_interes.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import '../models/usuario.dart';
 
 
 class UsuarioService {
   final CollectionReference usuariosColeccion= FirebaseFirestore.instance.collection('usuarios');
-
-
-  Future<void> agregarUsuario(Usuario usuario) async {
-    try {
-    await usuariosColeccion.add({
-      'nombre': usuario.nombre,   
-      'apellido': usuario.apellido,
-      'telefono': usuario.numeroTelefono,
-      'provincia': usuario.provincia,
-      'localidad': usuario.localidad,
-      'email': usuario.email,
-       });
-    } catch (e){
-      throw Exception('Error al agregar usuario: $e');
-    }
-  }
-
+  final storageRef = FirebaseStorage.instance.ref();
 
 Stream<List<PuntoDeInteres>> obtenerLogrosUsuario(String id) {
   return usuariosColeccion
@@ -76,17 +63,19 @@ Future<bool> registrarLogro(String idUsuario, String idPuntoDeInteres) async {
     }
   }
 
-agregarUsuarioInicial(String uid) async {
+agregarUsuarioInicial(String uid, String telefono) async {
   try {
     // Mapa con campos vacíos
     Map<String, dynamic> data = {
+      'id': uid,
       'nombre': '',
       'apellido': '',
-      'numeroTelefono': '',
+      'numeroTelefono': telefono,
       'provincia': '',
       'localidad': '',
       'email': '',
       'regCompletado': false,
+      'urlPerfil': 'https://firebasestorage.googleapis.com/v0/b/veo-veo-9d124.appspot.com/o/perfiles%2Fdefault.jpg?alt=media&token=e55e863a-859b-45d5-8066-8524f247a55f',
     };
     await usuariosColeccion.doc(uid).set(data);
   } catch (e) {
@@ -94,7 +83,17 @@ agregarUsuarioInicial(String uid) async {
   }
 }
 
-  completarRegistro(Usuario? user) {}
+  completarRegistro(Usuario? user) async {
+    await usuariosColeccion.doc(user!.id).set(user.toJson());
+  }
+
+Future<String> actualizarFotoPerfil(File imagen, String id) async {
+  final link = storageRef.child("perfiles/$id.jpg");
+  final tareaSubir = link.putFile(imagen);
+  await tareaSubir.whenComplete(() => null); 
+  final url = await link.getDownloadURL(); 
+  return url; 
+}
 
 
 

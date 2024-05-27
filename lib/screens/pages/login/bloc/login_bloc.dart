@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:veo_veo/models/usuario.dart';
 import 'package:veo_veo/providers/user_provider.dart';
 
 part 'login_event.dart';
@@ -25,7 +24,6 @@ Future<void> _onLoginIniciado(LoginIniciado event, Emitter<LoginState> emit) asy
     emit(Cargando());
     String telefono = event.nroTelefono;
     final completer = Completer<void>(); //esta para controlar que no termine el metodo, hasta que se complete el complete (se ejecute algun callback), si no da error con emit
-
     try {
       await auth.verifyPhoneNumber(
         phoneNumber: telefono,
@@ -53,7 +51,7 @@ Future<void> _onLoginIniciado(LoginIniciado event, Emitter<LoginState> emit) asy
         },
         codeSent: (String verificationId, int? resendToken) async {
           if (!completer.isCompleted) completer.complete();
-          emit(EsperandoCodigo(idVerificacion: verificationId));
+          emit(EsperandoCodigo(idVerificacion: verificationId, telefono: telefono));
         },
         codeAutoRetrievalTimeout: (String verificationId) async {
         },
@@ -75,17 +73,19 @@ Future<void> _onLoginIniciado(LoginIniciado event, Emitter<LoginState> emit) asy
       PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: idVerificacion, smsCode: codigoSMS);
       final user = await auth.signInWithCredential(credential);
       if(user.additionalUserInfo!.isNewUser){
-        await _userProvider.registrar(user.user!.uid);
+        await _userProvider.registrar(user.user!.uid, event.telefono);
         emit(RegistroExitoso());
       } else {
-        await _userProvider.loguear(user.user!.uid); //deberia ir if para emitir LoginExitoso o RegistroExitoso si el usuario tiene o no completado el reg.
-        emit(LoginExitoso());
+        await _userProvider.loguear(user.user!.uid); 
+        if(_userProvider.user!.regCompletado){
+          emit(LoginExitoso());
+        } else {
+          emit(RegistroExitoso());
+        }
       }
     } catch (e) {
       emit(CodigoIncorrecto());
     }
-    print('estado: $state');
-
   }
 
 }

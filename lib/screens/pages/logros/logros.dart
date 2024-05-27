@@ -36,7 +36,7 @@ Widget build(BuildContext context) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error al obtener el usuario.'));
+                  return Center(child: Text(snapshot.error.toString()));
                 } else {
                   final usuario = snapshot.data as Usuario; 
                   return StreamBuilder(
