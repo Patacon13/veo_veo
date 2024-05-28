@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:veo_veo/providers/user_provider.dart';
 import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/login/bloc/login_bloc.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
@@ -45,30 +43,21 @@ class _VerificacionPageState extends State<VerificacionPage> {
            if (state is LoginExitoso) {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => ChangeNotifierProvider.value(
-                    value: Provider.of<UsuarioManager>(context, listen: false),
-                    child: HomePage(),
-                  ),
-                ),
+                MaterialPageRoute(builder: (context) => HomePage(interfazInicial: 2)),
               );
             }
            else if (state is RegistroExitoso) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ChangeNotifierProvider.value(
-                    value: Provider.of<UsuarioManager>(context, listen: false),
-                    child: PerfilConfigPage(),
-                  ),
-                ),
+                  builder: (context) => PerfilConfigPage()),
               );
             }
           },
           child: BlocBuilder<LoginBloc, LoginState>(
             builder: (context, state) {
               return Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: <Widget>[
                     const Text(
@@ -78,7 +67,7 @@ class _VerificacionPageState extends State<VerificacionPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextField(
                       onChanged: _handleInputChanged,
                       decoration: const InputDecoration(
@@ -86,7 +75,7 @@ class _VerificacionPageState extends State<VerificacionPage> {
                         hintText: 'Introduzca el código',
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
@@ -96,12 +85,12 @@ class _VerificacionPageState extends State<VerificacionPage> {
                             telefono: widget.telefono,
                           ));
                         },
-                        child: Text('Enviar'),
+                        child: const Text('Enviar'),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     if (state is Cargando) ...[
-                      Center(
+                      const Center(
                         child: CircularProgressIndicator(),
                       ),
                     ] else if (state is CodigoIncorrecto) ...[

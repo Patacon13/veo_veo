@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:veo_veo/models/usuario.dart';
+import 'package:veo_veo/providers/user_provider.dart';
 import 'package:veo_veo/screens/pages/detalle_pto_de_interes/detalle.dart';
+import 'package:veo_veo/services/usuario_services.dart';
 
 class LogrosPage extends StatefulWidget {
   @override
@@ -10,16 +13,18 @@ class LogrosPage extends StatefulWidget {
 
 class _LogrosPageState extends State<LogrosPage> {
   late Future<Usuario> logueado;
+  late UsuarioService service;
   
   @override
   void initState(){
     super.initState();
-    logueado =  Usuario.fromId("1");
-
+    service = UsuarioService();
   }
 
 @override
 Widget build(BuildContext context) {
+  final userProvider = Provider.of<UsuarioManager>(context, listen: false);
+  Usuario? usuario = userProvider.user;
   return Container(
     color: Colors.grey[200],
     child: Column(
@@ -30,17 +35,8 @@ Widget build(BuildContext context) {
             elevation: 4,
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             color: Colors.white,
-            child: FutureBuilder(
-              future: logueado,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
-                } else {
-                  final usuario = snapshot.data as Usuario; 
-                  return StreamBuilder(
-                    stream: usuario.obtenerLogrosUsuario(),
+            child: StreamBuilder(
+                    stream: service.obtenerLogrosUsuario(usuario!.id),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Center(child: Text('Ocurrio un error al obtener los logros.'));
@@ -70,14 +66,11 @@ Widget build(BuildContext context) {
                         },
                       );
                     },
-                  );
-                }
-              },
-            ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        )
-      ],
-    ),
-  );
-}
-}
+        );
+      }
+    }

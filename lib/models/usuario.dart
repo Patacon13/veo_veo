@@ -16,17 +16,6 @@ class Usuario {
   Usuario(this.id, this.nombre, this.apellido, this.numeroTelefono, this.provincia, this.localidad, this.email, this.regCompletado, this.urlPerfil);
   
   
-  static Future<Usuario> fromId(String id) async {
-      DocumentSnapshot<Object?>? snapshot = await service.getUsuario(id);
-    if (snapshot != null && snapshot.exists && snapshot.data() is Map<String, dynamic>) {
-      Map<String, dynamic> data = snapshot.data()! as Map<String, dynamic>;
-       return fromJson(data);
-    } else {
-      throw Exception('Usuario no encontrado.');
-    }
-  }
-
-
     Map<String, dynamic> toJson() {
       final Map<String, dynamic> user = <String, dynamic>{};
       user["id"] = id;
@@ -57,17 +46,6 @@ class Usuario {
   }
 
 
-  Stream<List<PuntoDeInteres>> obtenerLogrosUsuario(){
-    return service.obtenerLogrosUsuario(id);
-  }
-
-  Future<bool> registrarLogro(punto) async {
-    return await service.registrarLogro(id, punto);
-  }
-
-  static registrarInicial(String uid, String telefono) async {
-    return await service.agregarUsuarioInicial(uid, telefono);
-  }
 
   
 }

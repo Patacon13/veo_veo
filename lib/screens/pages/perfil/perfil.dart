@@ -28,7 +28,7 @@ class PerfilPage extends StatelessWidget {
     Usuario? usuario = userProvider.user;
     return GestureDetector(
       onTap: () {
-        _mostrarFotoAmpliada(usuario!, context);
+        _mostrarFotoAmpliada(usuario, context);
       },
       child: Card(
         elevation: 10,
