@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:provider/provider.dart';
+import 'package:veo_veo/providers/user_provider.dart';
 import 'package:veo_veo/screens/pages/scan/bloc/scan_bloc.dart';
 
 class ScanPage extends StatefulWidget {
@@ -56,6 +58,8 @@ class _ScanPageState extends State<ScanPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UsuarioManager>(context, listen: false);
+    bloc.userProvider = userProvider;
     return Scaffold(
       body: Stack(
         children: [

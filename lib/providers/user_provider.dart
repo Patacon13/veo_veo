@@ -13,20 +13,18 @@ class UsuarioManager extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Usuario? get user => _user;
   User? get firestoreUser => _auth.currentUser;
-
-//Puede ser que se cree una instancia del service en el constructor
-
+  UsuarioService service = UsuarioService();
   Stream<User?> get usuarioStateChanges => _auth.authStateChanges();
 
 
   Future<void> loguear(String uid) async {
-      _user = await Usuario.fromId(uid); //se debe llamar al service no al usuario
+      _user = await service.getUsuario(uid); 
       await SessionManager().set("usuario", _user);
       notifyListeners();
   }
 
   Future<void> registrar(String uid, String telefono) async {
-      await Usuario.registrarInicial(uid, telefono);  //se debe llamar al service no al usuario
+      await service.agregarUsuarioInicial(uid, telefono); 
       loguear(uid);
   }
 
@@ -38,7 +36,7 @@ class UsuarioManager extends ChangeNotifier {
     } else {
         rec.urlPerfil = _user!.urlPerfil; 
     }
-    await UsuarioService().completarRegistro(rec);
+    await service.completarRegistro(rec);
     _user = rec;
     await SessionManager().set("usuario", rec);
     await SessionManager().update();
@@ -46,7 +44,7 @@ class UsuarioManager extends ChangeNotifier {
   }
 
   Future<String> actualizarFotoPerfil(File imagen){
-    return UsuarioService().actualizarFotoPerfil(imagen, _user!.id);
+    return service.actualizarFotoPerfil(imagen, _user!.id);
   }
 
   Future<bool> crearSesion() async {

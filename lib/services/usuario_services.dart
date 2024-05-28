@@ -13,6 +13,7 @@ class UsuarioService {
   final CollectionReference usuariosColeccion= FirebaseFirestore.instance.collection('usuarios');
   final storageRef = FirebaseStorage.instance.ref();
 
+
 Stream<List<PuntoDeInteres>> obtenerLogrosUsuario(String id) {
   return usuariosColeccion
       .doc(id) 
@@ -26,7 +27,8 @@ Stream<List<PuntoDeInteres>> obtenerLogrosUsuario(String id) {
           List<PuntoDeInteres> puntos = [];
           for (DocumentReference referencia in referencias) {
             DocumentSnapshot documento = await referencia.get();
-            PuntoDeInteres puntoDeInteres = PuntoDeInteres.fromSnaphost(documento);
+            Map<String, dynamic> data = documento.data()! as Map<String, dynamic>;
+            PuntoDeInteres puntoDeInteres = PuntoDeInteres.fromJson(data);
             puntos.add(puntoDeInteres);
           }
           return puntos;
@@ -39,12 +41,17 @@ Stream<List<PuntoDeInteres>> obtenerLogrosUsuario(String id) {
   });
 }
 
-Future<DocumentSnapshot<Object?>?> getUsuario(String id) async {
+Future<Usuario> getUsuario(String id) async {
   try {
     DocumentSnapshot snapshot = await usuariosColeccion
         .doc(id)
         .get();
-    return snapshot;
+    if (snapshot.exists && snapshot.data() is Map<String, dynamic>) {
+    Map<String, dynamic> data = snapshot.data()! as Map<String, dynamic>;
+      return Usuario.fromJson(data);
+  } else {
+    throw Exception('Usuario no encontrado.');
+  }
   } catch (e) {
       throw Exception('Error al obtener el usuario: $e');
   }

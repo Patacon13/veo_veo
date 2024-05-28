@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:veo_veo/models/usuario.dart';
 import 'package:veo_veo/providers/user_provider.dart';
@@ -36,6 +34,6 @@ class PerfilConfigBloc extends Bloc<PerfilConfigEvent, PerfilConfigState>{
 
   FutureOr<void> _onDatosPreviosRequeridos(DatosPreviosRequeridos event, Emitter<PerfilConfigState> emit) {
     Usuario? actual  = _userProvider.user;
-    emit(DatosPreviosCargados(usuario: actual)); //ver pq es nulo
+    emit(DatosPreviosCargados(usuario: actual));
   }
 }

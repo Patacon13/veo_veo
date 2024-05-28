@@ -158,7 +158,9 @@ class _PerfilConfigPageState extends State<PerfilConfigPage> {
   ImageProvider<Object>? _getImageProvider(Usuario? usuario) {
     if (_image != null) {
       return FileImage(_image!);
-    } else if (usuario!.urlPerfil.isNotEmpty) {
+    } else if(usuario == null){
+      return const NetworkImage("https://firebasestorage.googleapis.com/v0/b/veo-veo-9d124.appspot.com/o/perfiles%2Fdefault.jpg?alt=media&token=e55e863a-859b-45d5-8066-8524f247a55f");
+    } else if (usuario.urlPerfil.isNotEmpty) {
       return NetworkImage(usuario.urlPerfil);
     } else {
       return null;

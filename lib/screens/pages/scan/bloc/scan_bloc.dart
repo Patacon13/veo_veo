@@ -5,15 +5,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:veo_veo/models/punto_de_interes.dart';
 import 'package:veo_veo/models/usuario.dart';
-
+import 'package:veo_veo/providers/user_provider.dart';
+import 'package:veo_veo/services/punto_de_interes_service.dart';
+import 'package:veo_veo/services/usuario_services.dart';
 part 'scan_event.dart';
 part 'scan_state.dart';
 
 class ScanBloc extends Bloc<ScanEvent, ScanState> {
+  UsuarioService usuarioService = UsuarioService();
+  PuntoDeInteresService puntoService = PuntoDeInteresService();
+  late UsuarioManager _userProvider;
   ScanBloc() : super(ScanInitial()) {
     on<FotoEnviada>(_onFotoEnviada);
   }
 
+  set userProvider(UsuarioManager userProvider) {
+      _userProvider = userProvider;
+  }  
 
   Future<FutureOr<void>> _onFotoEnviada(FotoEnviada event, Emitter<ScanState> emit) async {
      emit(Cargando());
@@ -26,9 +34,9 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
           dynamic coincidencia = respuestaJson['coincidencia'];
           dynamic punto = respuestaJson['punto'];
           if(coincidencia > 0.05){
-            Usuario usuario = await Usuario.fromId("1");
-            PuntoDeInteres puntoDeInteres = await PuntoDeInteres.fromId(punto);
-            await usuario.registrarLogro(punto);
+            Usuario? usuario = _userProvider.user;
+            PuntoDeInteres puntoDeInteres = await puntoService.getPuntoDeInteres(punto);
+            await usuarioService.registrarLogro(usuario!.id, punto);
             emit(PuntoDetectado(punto: puntoDeInteres));
           } else {
             emit(PuntoNoDetectado());

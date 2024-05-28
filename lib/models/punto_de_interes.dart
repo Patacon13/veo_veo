@@ -16,18 +16,7 @@ class PuntoDeInteres {
 
 
 
-
-static Future<PuntoDeInteres> fromId(String id) async {
-DocumentSnapshot<Object?>? snapshot = await service.getPuntoDeInteres(id);
-if (snapshot != null && snapshot.exists && snapshot.data() is Map<String, dynamic>) {
-      return fromSnaphost(snapshot);
-    } else {
-      throw Exception('Punto de interes no encontrado.');
-    }
-}
-
-static PuntoDeInteres fromSnaphost(DocumentSnapshot snapshot){
-  Map<String, dynamic> data = snapshot.data()! as Map<String, dynamic>;
+static PuntoDeInteres fromJson(Map<String, dynamic> data){
   GeoPoint ubicacion = data['ubicacion'];
  return PuntoDeInteres.completo(
         data['id'].toString(),
