@@ -17,4 +17,14 @@ final class ErrorDeteccion extends ScanState{
 
 }
 
+final class WidgetOculto extends ScanState {
+
+}
+
+final class Redireccion extends ScanState {
+    final PuntoDeInteres punto;  
+  Redireccion({required this.punto});
+
+}
+
 final class Cargando extends ScanState{}
