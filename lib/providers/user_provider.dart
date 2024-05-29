@@ -30,6 +30,7 @@ class UsuarioManager extends ChangeNotifier {
 
   Future<void> completarRegistro(Usuario rec, File? image) async {
     rec.id = _user!.id;
+    rec.numeroTelefono = _user!.numeroTelefono;
     if(image != null){
         String url = await actualizarFotoPerfil(image);
         rec.urlPerfil = url;

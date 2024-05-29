@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:veo_veo/services/usuario_services.dart';
-import 'package:veo_veo/models/punto_de_interes.dart';
 
 class Usuario {
   static UsuarioService service = UsuarioService(); //Sacar de aca

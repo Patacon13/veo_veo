@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:veo_veo/providers/user_provider.dart';
+import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/scan/bloc/scan_bloc.dart';
 
 class ScanPage extends StatefulWidget {
@@ -88,29 +91,46 @@ class _ScanPageState extends State<ScanPage> {
             right: 0,
             child: Center(
               child: ElevatedButton(
-                onPressed: _takePicture,
-                child: Text('Tomar Foto'),
+                onPressed: () {
+                  final currentState = bloc.state;
+                  if (currentState is WidgetOculto || currentState is ScanInitial) {
+                    _takePicture();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                ),
+                child: const Text('Tomar Foto'),
               ),
             ),
           ),
-          StreamBuilder<ScanState>(
-            stream: bloc.stream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final scanState = snapshot.data!;
+          BlocProvider(
+        create: (context) => bloc,
+        child: BlocListener<ScanBloc, ScanState>(
+          listener: (context, state) {
+            if (state is Redireccion) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage(interfazInicial: 0)),
+              );
+            }
+          },
+          child: BlocBuilder<ScanBloc, ScanState>(
+            builder: (context, scanState) {
                 if (scanState is PuntoDetectado) {
                   return Center(child: _widgetDetectado(scanState));
                 } else if (scanState is PuntoNoDetectado) {
                   return Center(child: _widgetNoDetectado());
                 } else if (scanState is Cargando) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                else if (scanState is ErrorDeteccion) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (scanState is ErrorDeteccion) {
                   return Center(child: _widgetErrorDeteccion());
-                }
+                } else if (scanState is WidgetOculto) {
+                  return Container();
               }
-              return Container();
+            return Container();
             },
+          ),
+        ),
           ),
         ],
       ),
@@ -118,42 +138,61 @@ class _ScanPageState extends State<ScanPage> {
   }
 
   Widget _widgetDetectado(PuntoDetectado scanState) {
-    return AnimatedOpacity(
-      duration: const Duration(milliseconds: 500),
-      opacity: 1.0,
-      curve: Curves.easeInOut,
-      child: Text(
-        '${scanState.punto.nombre} detectado correctamente! :D',
-        style: const TextStyle(color: Colors.green, fontSize: 24.0),
+    return Padding(
+      padding: const EdgeInsets.only(top: 420.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(Icons.check, size: 48.0, color: Color.fromARGB(255, 92, 196, 96)),
+            const SizedBox(height: 16.0),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                '${scanState.punto.nombre} detectado correctamente! :D. Redireccionando...',
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.green, fontSize: 20.0),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _widgetNoDetectado() {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.close, size: 48.0, color: Colors.red),
-        SizedBox(height: 16.0),
-        Text(
-          'No se detectó ningún punto de interés :(',
-          style: TextStyle(color: Colors.red, fontSize: 20.0),
-        ),
-      ],
+    return const Padding(
+      padding: EdgeInsets.only(top: 420.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.close, size: 48.0, color: Colors.red),
+          SizedBox(height: 16.0),
+          Text(
+            'No se detectó ningún punto de interés :(',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.red, fontSize: 20.0),
+          ),
+        ],
+      ),
     );
   }
 
-    Widget _widgetErrorDeteccion() {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.close, size: 48.0, color: Colors.red),
-        SizedBox(height: 16.0),
-        Text(
-          'Ocurrio un error al procesar la imagen. :(',
-          style: TextStyle(color: Colors.red, fontSize: 20.0),
-        ),
-      ],
+  Widget _widgetErrorDeteccion() {
+    return const Padding(
+      padding: EdgeInsets.only(top: 400.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.close, size: 48.0, color: Colors.red),
+          SizedBox(height: 16.0),
+          Text(
+            'Ocurrio un error al procesar la imagen. :(',
+            style: TextStyle(color: Colors.red, fontSize: 20.0),
+          ),
+        ],
+      ),
     );
   }
 }
