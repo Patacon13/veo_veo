@@ -13,7 +13,6 @@ part 'scan_state.dart';
 
 class ScanBloc extends Bloc<ScanEvent, ScanState> {
   UsuarioService usuarioService = UsuarioService();
-  bool mostrarWidget = true;
   PuntoDeInteresService puntoService = PuntoDeInteresService();
   late UsuarioManager _userProvider;
   ScanBloc() : super(ScanInitial()) {
@@ -25,7 +24,6 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   }  
 
   Future<FutureOr<void>> _onFotoEnviada(FotoEnviada event, Emitter<ScanState> emit) async {
-     mostrarWidget = true;
      emit(Cargando());
      try {
      Response respuesta = await compararImagen(event.foto);
