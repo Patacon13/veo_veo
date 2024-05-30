@@ -97,8 +97,6 @@ class _ScanPageState extends State<ScanPage> {
                     _takePicture();
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                ),
                 child: const Text('Tomar Foto'),
               ),
             ),
