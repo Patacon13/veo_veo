@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:veo_veo/models/punto_de_interes.dart';
 
-class DetallePage extends StatefulWidget {
+class DetallePDIPage extends StatefulWidget {
   final PuntoDeInteres? detalle;
-  DetallePage({Key? key, this.detalle}) : super(key: key);
+  DetallePDIPage({Key? key, this.detalle}) : super(key: key);
   @override
-  _DetallePageState createState() => _DetallePageState();
+  _DetallePDIPageState createState() => _DetallePDIPageState();
 }
 
-class _DetallePageState extends State<DetallePage> {
+class _DetallePDIPageState extends State<DetallePDIPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalle ' + (widget.detalle?.nombre ?? '')),
+        title: Text('Detalle ${widget.detalle?.nombre ?? ''}'),
       ),
       body:  Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,11 +30,11 @@ class _DetallePageState extends State<DetallePage> {
           color: Colors.grey[300],
           child: Image.network(widget.detalle!.portada, fit: BoxFit.cover),
         ),
-        SizedBox(height: 16),
-        SizedBox(height: 8),
+        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         Text(
           widget.detalle!.descripcion,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
           ),
           textAlign: TextAlign.center,
