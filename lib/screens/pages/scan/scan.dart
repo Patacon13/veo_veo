@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:veo_veo/providers/user_provider.dart';
 import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/scan/bloc/scan_bloc.dart';
+import 'package:veo_veo/screens/pages/subir_foto_pdi/subir_foto_pdi.dart';
 
 class ScanPage extends StatefulWidget {
   @override
@@ -108,7 +109,7 @@ class _ScanPageState extends State<ScanPage> {
             if (state is Redireccion) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage(interfazInicial: 0)),
+                MaterialPageRoute(builder: (context) => SubirFotoPDIPage(punto: state.punto)),
               );
             }
           },

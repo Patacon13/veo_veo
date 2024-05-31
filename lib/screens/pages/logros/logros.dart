@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:veo_veo/models/usuario.dart';
 import 'package:veo_veo/providers/user_provider.dart';
-import 'package:veo_veo/screens/pages/detalle_pto_de_interes/detalle.dart';
+import 'package:veo_veo/screens/pages/detalle_pdi/detalle_pdi.dart';
 import 'package:veo_veo/services/usuario_services.dart';
 
 class LogrosPage extends StatefulWidget {
@@ -58,7 +58,7 @@ Widget build(BuildContext context) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DetallePage(detalle: puntoDeInteres),
+                                  builder: (context) => DetallePDIPage(detalle: puntoDeInteres),
                                 ),
                               );
                             },
