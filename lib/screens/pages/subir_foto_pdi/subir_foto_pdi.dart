@@ -42,6 +42,7 @@ class _SubirFotoPDIPageState extends State<SubirFotoPDIPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cargar foto de ${widget.punto?.nombre ?? ''}'),
+        automaticallyImplyLeading: false,  
       ),
       body: Stack(
         children: [

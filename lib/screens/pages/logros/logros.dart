@@ -44,6 +44,14 @@ Widget build(BuildContext context) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       }
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              'No tenes ningun logro todavia :(',
+                              style: TextStyle(fontSize: 18, color: Colors.black),
+                            ),
+                          );
+                        }
                       return ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {

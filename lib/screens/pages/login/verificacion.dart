@@ -35,6 +35,7 @@ class _VerificacionPageState extends State<VerificacionPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Veo Veo'),
+        automaticallyImplyLeading: false,  
       ),
       body: BlocProvider(
         create: (context) => widget.bloc,
