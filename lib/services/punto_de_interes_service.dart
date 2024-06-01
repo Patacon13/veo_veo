@@ -1,6 +1,4 @@
-// firestore_controller.dart
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:veo_veo/models/usuario.dart';
@@ -34,15 +32,19 @@ class PuntoDeInteresService {
   }
 
 
-  Future<List<DocumentSnapshot<Object?>>?> getPuntosDeInteres() async { //deberia devolver una lista de punto de interes
+  Future<List<PuntoDeInteres>> getPuntosDeInteres() async { 
+    List<PuntoDeInteres> lista = [];
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('puntos_de_interes')
           .get();
-      return snapshot.docs;
+      for (var element in snapshot.docs) {
+        lista.add(PuntoDeInteres.fromJson(element.data() as Map<String, dynamic>));
+      }
     } catch (e) {
       throw Exception('Error al obtener todos los puntos de interes');
     }
+    return lista;
   }
 
   Future<String> subirImagen(PuntoDeInteres punto, File? imagen, Usuario? user) async {
@@ -52,5 +54,29 @@ class PuntoDeInteresService {
     final url = await link.getDownloadURL(); 
     return url; 
   } 
+
+Future<List<String>> obtenerFotosUsuariosPDI(PuntoDeInteres punto) async {
+  List<String> lista = [];
+    final directorio = storageRef.child('subidas/');
+    final resultado = await directorio.listAll();
+    final fotosPunto = resultado.items.where((item) => item.name.startsWith('${punto.id}_'));
+    for (var item in fotosPunto) {
+      final url = await item.getDownloadURL();
+      lista.add(url);
+    }
+  return lista;
+}
+
+Future<List<String>> obtenerFotosRepositorioPDI(PuntoDeInteres punto) async {
+  List<String> lista = [];
+    final directorio = storageRef.child('repositorio/');
+    final resultado = await directorio.listAll();
+    final fotosPunto = resultado.items.where((item) => item.name.startsWith('${punto.id}_'));
+    for (var item in fotosPunto) {
+      final url = await item.getDownloadURL();
+      lista.add(url);
+    }
+  return lista;
+}
 
 }

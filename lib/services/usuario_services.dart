@@ -1,8 +1,4 @@
-//usuario_service.dart
-
-
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:veo_veo/models/punto_de_interes.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -91,7 +87,7 @@ agregarUsuarioInicial(String uid, String telefono) async {
 }
 
   completarRegistro(Usuario? user) async {
-    await usuariosColeccion.doc(user!.id).set(user.toJson());
+    await usuariosColeccion.doc(user!.id).update(user.toJson());
   }
 
 Future<String> actualizarFotoPerfil(File imagen, String id) async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:veo_veo/screens/pages/logros/logros.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil.dart';
+import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
 import 'package:veo_veo/screens/pages/scan/scan.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,6 +31,21 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Veo Veo'),
+        automaticallyImplyLeading: false,  
+        actions: _paginaActual == 2 ? [ //si la interfaz es el perfil agrego la configuracion ahi
+                IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PerfilConfigPage(volverAtras: true),
+                      ),
+                    );
+                  },
+                ),
+              ]
+            : null,
       ),
       body: _paginas[_paginaActual],
       bottomNavigationBar: BottomNavigationBar(

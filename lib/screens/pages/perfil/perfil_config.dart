@@ -9,6 +9,9 @@ import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/perfil/bloc/perfil_config_bloc.dart';
 
 class PerfilConfigPage extends StatefulWidget {
+    final bool volverAtras;
+   PerfilConfigPage({Key? key,this.volverAtras=false}) : super(key: key);
+
   @override
   _PerfilConfigPageState createState() => _PerfilConfigPageState();
 }
@@ -53,6 +56,7 @@ class _PerfilConfigPageState extends State<PerfilConfigPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Configurar Perfil'),
+        automaticallyImplyLeading: widget.volverAtras,  
       ),
         body: BlocProvider(
         create: (context) => bloc,
