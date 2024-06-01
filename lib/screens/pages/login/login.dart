@@ -18,8 +18,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late LoginBloc _bloc;
   String _telefono = '', _codigoPais = '+54', _area = '';
-  final LoginBloc _bloc = LoginBloc();
 
   void _handleInputChanged(String value) {
     setState(() {
@@ -37,6 +37,12 @@ class _LoginPageState extends State<LoginPage> {
     });
     print('País seleccionado: ${country.name}, Código: ${country.phoneCode}');
   }
+  @override
+  void initState() {
+    _bloc = LoginBloc();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     _bloc.userProvider = Provider.of<UsuarioManager>(context);

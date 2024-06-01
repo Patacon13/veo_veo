@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:latlong2/latlong.dart' as ll;
 import 'package:veo_veo/models/punto_de_interes.dart';
 import 'package:veo_veo/services/punto_de_interes_service.dart';
 part 'mapa_event.dart';
@@ -21,7 +22,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
        try {
       LocationData ubicacion = await event.location.getLocation();      
       double distanciaMinima = double.infinity;
-      for (LatLng coordenada in event.coordenadas) {
+      for (ll.LatLng coordenada in event.coordenadas) {
         double distancia = _calcularDistancia(
           ubicacion.latitude!,
           ubicacion.longitude!,
@@ -54,9 +55,9 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     emit(Cargando());
     PuntoDeInteresService controller = PuntoDeInteresService();
     List<PuntoDeInteres> puntos = await controller.getPuntosDeInteres();
-    List<LatLng> nuevasCoordenadas = [];
+    List<ll.LatLng> nuevasCoordenadas = [];
       for (var punto in puntos) {
-        nuevasCoordenadas.add(punto.ubicacion as LatLng);
+        nuevasCoordenadas.add(punto.ubicacion);
       }
     LocationData ubicacion = await Location().getLocation();
     emit(PuntosCargados(coordenadas: nuevasCoordenadas, posicionInicial: ubicacion));
@@ -64,6 +65,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
 
 
   FutureOr<void> _onLocalizacionPeriodicaRequerida(LocalizacionPeriodicaRequerida event, Emitter<MapaState> emit) {
+    add(LocalizacionRequerida(mapController: event.mapController, coordenadas: event.coordenadas, location: event.location));
     _timerUbicacion?.cancel();
     _timerUbicacion = Timer.periodic(const Duration(seconds: 5), (timer) {
       add(LocalizacionRequerida(

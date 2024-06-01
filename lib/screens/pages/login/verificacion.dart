@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/login/bloc/login_bloc.dart';
-import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
 
 class VerificacionPage extends StatefulWidget {
   final String codigo;
@@ -38,20 +36,6 @@ class _VerificacionPageState extends State<VerificacionPage> {
       ),
       body: BlocProvider(
         create: (context) => widget.bloc,
-        child: BlocListener<LoginBloc, LoginState>(
-          listener: (context, state) {
-            if (state is LoginExitoso) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage(interfazInicial: 2)),
-              );
-            } else if (state is RegistroExitoso) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PerfilConfigPage()),
-              );
-            }
-          },
           child: BlocBuilder<LoginBloc, LoginState>(
             builder: (context, state) {
               return Container(
@@ -106,7 +90,6 @@ class _VerificacionPageState extends State<VerificacionPage> {
             },
           ),
         ),
-      ),
     );
   }
 

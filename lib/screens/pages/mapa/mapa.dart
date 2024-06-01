@@ -9,17 +9,25 @@ class MapaPage extends StatefulWidget {
 }
 
 class _MapaPageState extends State<MapaPage> {
-  final MapaBloc bloc = MapaBloc();
+  late MapaBloc bloc;
   GoogleMapController? mapController;
 
   @override
   void initState() {
     super.initState();
+    bloc = MapaBloc();
     bloc.add(PuntosSolicitados());
   }
 
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
+    mapController?.dispose();
+    bloc.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext contextPrincipal) {
     return Scaffold(
       body: Stack(
         children: [
@@ -44,7 +52,7 @@ class _MapaPageState extends State<MapaPage> {
                     },
                     initialCameraPosition: CameraPosition(
                       target: target,
-                      zoom: 12.0,
+                      zoom: 16.0,
                     ),
                     myLocationEnabled: true,
                     myLocationButtonEnabled: false,
@@ -62,9 +70,9 @@ class _MapaPageState extends State<MapaPage> {
               if (snapshot.hasData) {
                 final mapaState = snapshot.data!;
                 if (mapaState is BotonHabilitado) {
-                  return _buildFloatingActionButton(context, Colors.blue, true);
+                  return _buildFloatingActionButton(contextPrincipal, Colors.blue, true);
                 } else if (mapaState is BotonDeshabilitado) {
-                  return _buildFloatingActionButton(context, Colors.grey, false);
+                  return _buildFloatingActionButton(contextPrincipal, Colors.grey, false);
                 }
               }
               return Container();
@@ -84,8 +92,7 @@ class _MapaPageState extends State<MapaPage> {
         alignment: Alignment.center,
         child: FloatingActionButton(
           onPressed: habilitado ? () {
-            Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ScanPage()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ScanPage()));
           } : null,
           backgroundColor: color,
           child: const Icon(Icons.camera),
