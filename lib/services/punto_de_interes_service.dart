@@ -36,7 +36,7 @@ class PuntoDeInteresService {
     List<PuntoDeInteres> lista = [];
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('punt2os_de_interes')
+          .collection('puntos_de_interes')
           .get();
       for (var element in snapshot.docs) {
         lista.add(PuntoDeInteres.fromJson(element.data() as Map<String, dynamic>));
@@ -54,5 +54,29 @@ class PuntoDeInteresService {
     final url = await link.getDownloadURL(); 
     return url; 
   } 
+
+Future<List<String>> obtenerFotosUsuariosPDI(PuntoDeInteres punto) async {
+  List<String> lista = [];
+    final directorio = storageRef.child('subidas/');
+    final resultado = await directorio.listAll();
+    final fotosPunto = resultado.items.where((item) => item.name.startsWith('${punto.id}_'));
+    for (var item in fotosPunto) {
+      final url = await item.getDownloadURL();
+      lista.add(url);
+    }
+  return lista;
+}
+
+Future<List<String>> obtenerFotosRepositorioPDI(PuntoDeInteres punto) async {
+  List<String> lista = [];
+    final directorio = storageRef.child('repositorio/');
+    final resultado = await directorio.listAll();
+    final fotosPunto = resultado.items.where((item) => item.name.startsWith('${punto.id}_'));
+    for (var item in fotosPunto) {
+      final url = await item.getDownloadURL();
+      lista.add(url);
+    }
+  return lista;
+}
 
 }
