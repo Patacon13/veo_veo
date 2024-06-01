@@ -56,20 +56,17 @@ class PuntoDeInteresService {
   } 
 
 Future<List<String>> obtenerFotosUsuariosPDI(PuntoDeInteres punto) async {
-  List<String> lista = [];
     final directorio = storageRef.child('subidas/');
-    final resultado = await directorio.listAll();
-    final fotosPunto = resultado.items.where((item) => item.name.startsWith('${punto.id}_'));
-    for (var item in fotosPunto) {
-      final url = await item.getDownloadURL();
-      lista.add(url);
-    }
-  return lista;
+    return _obtenerFotos(directorio, punto);
 }
 
 Future<List<String>> obtenerFotosRepositorioPDI(PuntoDeInteres punto) async {
-  List<String> lista = [];
     final directorio = storageRef.child('repositorio/');
+    return _obtenerFotos(directorio, punto);
+}
+
+Future<List<String>> _obtenerFotos(directorio, PuntoDeInteres punto) async {
+    List<String> lista = [];
     final resultado = await directorio.listAll();
     final fotosPunto = resultado.items.where((item) => item.name.startsWith('${punto.id}_'));
     for (var item in fotosPunto) {

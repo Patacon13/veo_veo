@@ -5,7 +5,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:veo_veo/providers/user_provider.dart';
-import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/scan/bloc/scan_bloc.dart';
 import 'package:veo_veo/screens/pages/subir_foto_pdi/subir_foto_pdi.dart';
 
