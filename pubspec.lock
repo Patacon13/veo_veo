@@ -138,7 +138,7 @@ packages:
     source: hosted
     version: "1.18.0"
   country_pickers:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: country_pickers
       sha256: a71df4a061b25f07b202a881c43a057edc842a30b3410d511382103c68afebc2

@@ -44,7 +44,7 @@ dependencies:
   flutter_bloc: ^8.1.5
   flutter_session_manager: ^1.0.3
   carousel_slider: ^4.0.0
-
+  country_pickers: ^2.0.0
 
 
 
