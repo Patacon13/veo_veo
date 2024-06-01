@@ -3,11 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:country_pickers/country.dart';
 import 'package:veo_veo/providers/user_provider.dart';
 import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/login/bloc/login_bloc.dart';
 import 'package:veo_veo/screens/pages/login/verificacion.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
+
+import '../../widgets/country_picker_widget.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -15,7 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String _telefono = '';
+  String _telefono = '', _codigoPais = '+54', _area = '';
   final LoginBloc _bloc = LoginBloc();
 
   void _handleInputChanged(String value) {
@@ -23,7 +26,17 @@ class _LoginPageState extends State<LoginPage> {
       _telefono = value;
     });
   }
-
+  void _handleAreaChanged(String value) {
+    setState(() {
+      _area = value;
+    });
+  }
+  void _handleCountrySelected(Country country) {
+    setState(() {
+      _codigoPais = '+${country.phoneCode}';
+    });
+    print('País seleccionado: ${country.name}, Código: ${country.phoneCode}');
+  }
   @override
   Widget build(BuildContext context) {
     _bloc.userProvider = Provider.of<UsuarioManager>(context);
@@ -68,14 +81,35 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      onChanged: (value) => _handleInputChanged(value),
-                      decoration: const InputDecoration(
-                        labelText: 'Número de teléfono',
-                        hintText: 'Introduzca su número',
-                      ),
-                    ),
+                    Row(
+                      children: [
+                        CountryPickerWidget(
+                          onCountrySelected: _handleCountrySelected,
+                        ), // Country picker widget
+                        SizedBox(width: 1), // Spacer between country picker and text field
+                        Expanded(
+                          flex: 1,
+                          child: TextField(
+                            onChanged: (value) => _handleAreaChanged(value),
+                            decoration: const InputDecoration(
+                              labelText: 'Area',
+                              hintText: 'Area',
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            onChanged: (value) => _handleInputChanged(value),
+                           decoration: const InputDecoration(
+                              labelText: 'Número de teléfono',
+                              hintText: 'Introduzca su número',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //row
                     const SizedBox(height: 20),
                     if (state is ErrorOcurrido) 
                       const Text(
@@ -93,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
-                          _bloc.add(LoginIniciado(nroTelefono: _telefono));
+                          _bloc.add(LoginIniciado(nroTelefono: _codigoPais + _area + _telefono));
                         },
                         child: const Text('Registrarse/Ingresar'),
                       ),

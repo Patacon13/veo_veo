@@ -5,9 +5,12 @@ import 'providers/user_provider.dart';
 import 'screens/pages/home/home.dart';
 import 'screens/pages/login/login.dart';
 import 'firebase_options.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const VeoVeo());
 }

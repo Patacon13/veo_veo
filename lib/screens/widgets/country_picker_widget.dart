@@ -3,6 +3,10 @@ import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 
 class CountryPickerWidget extends StatefulWidget {
+  final void Function(Country)? onCountrySelected;
+
+  CountryPickerWidget({this.onCountrySelected});
+
   @override
   _CountryPickerWidgetState createState() => _CountryPickerWidgetState();
 }
@@ -47,9 +51,14 @@ class _CountryPickerWidgetState extends State<CountryPickerWidget> {
         searchInputDecoration: InputDecoration(hintText: 'Buscar...'),
         isSearchable: true,
         title: Text('Seleccione su pais'),
-        onValuePicked: (Country country) => setState(() {
-          _selectedCountry = country;
-        }),
+        onValuePicked: (Country country) {
+          setState(() {
+            _selectedCountry = country;
+          });
+          if (widget.onCountrySelected != null) {
+            widget.onCountrySelected!(country);
+          }
+        },
         itemBuilder: (Country country) => Container(
           child: Row(
             children: <Widget>[
