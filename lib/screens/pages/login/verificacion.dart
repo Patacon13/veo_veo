@@ -4,10 +4,9 @@ import 'package:veo_veo/screens/pages/login/bloc/login_bloc.dart';
 
 class VerificacionPage extends StatefulWidget {
   final String codigo;
-  final LoginBloc bloc;
   final String telefono;
 
-  VerificacionPage({Key? key, required this.codigo, required this.bloc, required this.telefono}) : super(key: key);
+  VerificacionPage({Key? key, required this.codigo, required this.telefono}) : super(key: key);
   @override
   _VerificacionPageState createState() => _VerificacionPageState();
 }
@@ -21,18 +20,25 @@ class _VerificacionPageState extends State<VerificacionPage> {
     });
   }
 
- Future<bool> _onWillPop() async {
+  Future<bool> _onWillPop() async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Completa la verificación.'),
-          content: const Text('Por favor, ingresa el código de verificación antes de salir.'),
+          title: const Text('¿Estas seguro?'),
+          content: const Text('Si vas para atrás, se va a cancelar el login/registro y vas a tener que volver a empezar. ¿Deseas continuar?'),
           actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
             TextButton(
               child: const Text('Aceptar'),
               onPressed: () {
-                Navigator.of(context).pop(false);
+                BlocProvider.of<LoginBloc>(context).add(LoginReestablecido());
+                Navigator.of(context).pop(true);
               },
             ),
           ],
@@ -48,6 +54,7 @@ class _VerificacionPageState extends State<VerificacionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final LoginBloc bloc = BlocProvider.of<LoginBloc>(context);
     // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: _onWillPop,
@@ -56,19 +63,17 @@ class _VerificacionPageState extends State<VerificacionPage> {
           title: const Text('Veo Veo'),
           automaticallyImplyLeading: false,
         ),
-        body: BlocProvider(
-          create: (context) => widget.bloc,
-          child: BlocBuilder<LoginBloc, LoginState>(
+        body:  BlocBuilder<LoginBloc, LoginState>(
             builder: (context, state) {
               return Container(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Por favor, introduzca el código recibido por SMS',
-                      style: TextStyle(
-                        fontSize: 24,
+                    Text(
+                      "Enviamos un mensaje de texto con el código al número ${widget.telefono}. Ingresalo acá.",
+                      style: const TextStyle(
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -84,7 +89,7 @@ class _VerificacionPageState extends State<VerificacionPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           String codigoCompleto = _codigo.join();
-                          widget.bloc.add(CodigoVerificacionIngresado(
+                          bloc.add(CodigoVerificacionIngresado(
                             codigoSMS: codigoCompleto,
                             idVerificacion: widget.codigo,
                             telefono: widget.telefono,
@@ -111,7 +116,6 @@ class _VerificacionPageState extends State<VerificacionPage> {
               );
             },
           ),
-        ),
       ),
     );
   }

@@ -2,9 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:country_pickers/country.dart';
-import 'package:veo_veo/providers/user_provider.dart';
 import 'package:veo_veo/screens/pages/home/home.dart';
 import 'package:veo_veo/screens/pages/login/bloc/login_bloc.dart';
 import 'package:veo_veo/screens/pages/login/verificacion.dart';
@@ -18,7 +16,6 @@ class LoginPage extends StatefulWidget with WidgetsBindingObserver {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late LoginBloc _bloc;
   String _telefono = '', _codigoPais = '+54', _area = '';
 
   void _handleInputChanged(String value) {
@@ -39,26 +36,24 @@ class _LoginPageState extends State<LoginPage> {
   }
   @override
   void initState() {
-    _bloc = LoginBloc();
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    _bloc.userProvider = Provider.of<UsuarioManager>(context);
-    return Scaffold(
+      final LoginBloc _bloc = BlocProvider.of<LoginBloc>(context);
+      return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
         automaticallyImplyLeading: false,  
       ),
-      body: BlocProvider(
-        create: (context) => _bloc,
-        child: BlocListener<LoginBloc, LoginState>(
+      body: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is EsperandoCodigo) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => VerificacionPage(codigo: state.idVerificacion, bloc: _bloc, telefono: state.telefono)),
+                MaterialPageRoute(builder: (context) => VerificacionPage(codigo: state.idVerificacion, telefono: state.telefono)),
               );
             }
            if (state is LoginExitoso) {
@@ -145,7 +140,6 @@ class _LoginPageState extends State<LoginPage> {
             },
           ),
         ),
-      ),
     );
   }
 

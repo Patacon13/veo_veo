@@ -14,6 +14,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInicial()) {
     on<LoginIniciado>(_onLoginIniciado);
     on<CodigoVerificacionIngresado>(_onCodigoVerificacionIngresado);
+    on<LoginReestablecido>(_onLoginReestablecido);
+
   }
 
   set userProvider(UsuarioManager provider){
@@ -34,15 +36,13 @@ Future<void> _onLoginIniciado(LoginIniciado event, Emitter<LoginState> emit) asy
             if(user.additionalUserInfo!.isNewUser){
                 await _userProvider.registrar(user.user!.uid, telefono);
                 emit(RegistroExitoso());
-                close();
             } else {
               await _userProvider.loguear(user.user!.uid); 
               if(_userProvider.user!.regCompletado){
                 emit(LoginExitoso());
-                close();
+
               } else {
                 emit(RegistroExitoso());
-                close();
               }
             }
           } catch (e) {
@@ -84,14 +84,12 @@ Future<void> _onLoginIniciado(LoginIniciado event, Emitter<LoginState> emit) asy
       if(user.additionalUserInfo!.isNewUser){
         await _userProvider.registrar(user.user!.uid, event.telefono);
         emit(RegistroExitoso());
-        close();
       } else {
         await _userProvider.loguear(user.user!.uid); 
         if(_userProvider.user!.regCompletado){
           emit(LoginExitoso());
         } else {
           emit(RegistroExitoso());
-          close();
         }
       }
     } catch (e) {
@@ -102,4 +100,8 @@ Future<void> _onLoginIniciado(LoginIniciado event, Emitter<LoginState> emit) asy
 
 
 
+
+  FutureOr<void> _onLoginReestablecido(LoginReestablecido event, Emitter<LoginState> emit) {
+    emit(LoginInicial());
+  }
 }
