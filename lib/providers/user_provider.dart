@@ -48,12 +48,16 @@ class UsuarioManager extends ChangeNotifier {
     return service.actualizarFotoPerfil(imagen, _user!.id);
   }
 
-  Future<bool> crearSesion() async {
+  Future<int> crearSesion() async {
     if(await SessionManager().containsKey("usuario")){
       _user = Usuario.fromJson(await SessionManager().get("usuario"));
-      return true;
+      if(_user!.regCompletado){
+        return 1; //1 indica que esta logueado y completo el registro.
+      } else {
+        return 2; //2 indica que esta logueado y no completo el registro.
+      }
     } else {
-      return false;
+      return 0; //0 indica no logueado
     }
   }
 

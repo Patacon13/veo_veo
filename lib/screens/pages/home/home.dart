@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:veo_veo/providers/user_provider.dart';
+import 'package:veo_veo/screens/pages/login/login.dart';
 import 'package:veo_veo/screens/pages/logros/logros.dart';
 import 'package:veo_veo/screens/pages/mapa/mapa.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil.dart';
@@ -50,7 +51,13 @@ class _HomePageState extends State<HomePage> {
                   icon: const Icon(Icons.logout),
                   onPressed: () {
                     final userProvider = Provider.of<UsuarioManager>(context, listen: false);
-                    userProvider.signout();
+                    userProvider.signout(); //Ver por que cuando recien se inicio sesion, cuando se sale no se redirecciona solo, mientras uso el navigator  
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
                   },
                 ),
               ]
