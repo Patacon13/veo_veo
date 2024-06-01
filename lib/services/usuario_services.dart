@@ -87,7 +87,7 @@ agregarUsuarioInicial(String uid, String telefono) async {
 }
 
   completarRegistro(Usuario? user) async {
-    await usuariosColeccion.doc(user!.id).set(user.toJson());
+    await usuariosColeccion.doc(user!.id).update(user.toJson());
   }
 
 Future<String> actualizarFotoPerfil(File imagen, String id) async {
