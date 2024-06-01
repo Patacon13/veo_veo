@@ -7,7 +7,7 @@ sealed class MapaState{}
 class MapaInitial extends MapaState{}
 
 class PuntosCargados extends MapaState{
-    late List<LatLng> coordenadas;
+    late List<ll.LatLng> coordenadas;
     late LocationData posicionInicial;
     PuntosCargados({required this.coordenadas, required this.posicionInicial});
 }

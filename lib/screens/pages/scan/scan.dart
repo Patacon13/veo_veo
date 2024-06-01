@@ -14,15 +14,17 @@ class ScanPage extends StatefulWidget {
 }
 
 class _ScanPageState extends State<ScanPage> {
-  final ScanBloc bloc = ScanBloc();
+  late ScanBloc bloc;
   CameraController? _cameraController;
   Future<void>? _initializeControllerFuture;
 
   @override
   void initState() {
     super.initState();
+    bloc = ScanBloc();
     _initializeCamera();
   }
+
 
   Future<void> _initializeCamera() async {
     final cameras = await availableCameras();
@@ -70,7 +72,9 @@ class _ScanPageState extends State<ScanPage> {
             future: _initializeControllerFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return CameraPreview(_cameraController!);
+                return Positioned.fill(
+                  child: CameraPreview(_cameraController!),
+                );
               } else {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -85,11 +89,10 @@ class _ScanPageState extends State<ScanPage> {
               ),
             ),
           ),
-          Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child: Center(
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
               child: ElevatedButton(
                 onPressed: () {
                   final currentState = bloc.state;
@@ -102,33 +105,33 @@ class _ScanPageState extends State<ScanPage> {
             ),
           ),
           BlocProvider(
-        create: (context) => bloc,
-        child: BlocListener<ScanBloc, ScanState>(
-          listener: (context, state) {
-            if (state is Redireccion) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SubirFotoPDIPage(punto: state.punto)),
-              );
-            }
-          },
-          child: BlocBuilder<ScanBloc, ScanState>(
-            builder: (context, scanState) {
-                if (scanState is PuntoDetectado) {
-                  return Center(child: _widgetDetectado(scanState));
-                } else if (scanState is PuntoNoDetectado) {
-                  return Center(child: _widgetNoDetectado());
-                } else if (scanState is Cargando) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (scanState is ErrorDeteccion) {
-                  return Center(child: _widgetErrorDeteccion());
-                } else if (scanState is WidgetOculto) {
+            create: (context) => bloc,
+            child: BlocListener<ScanBloc, ScanState>(
+              listener: (context, state) {
+                if (state is Redireccion) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SubirFotoPDIPage(punto: state.punto)),
+                  );
+                }
+              },
+              child: BlocBuilder<ScanBloc, ScanState>(
+                builder: (context, scanState) {
+                  if (scanState is PuntoDetectado) {
+                    return Center(child: _widgetDetectado(scanState));
+                  } else if (scanState is PuntoNoDetectado) {
+                    return Center(child: _widgetNoDetectado());
+                  } else if (scanState is Cargando) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (scanState is ErrorDeteccion) {
+                    return Center(child: _widgetErrorDeteccion());
+                  } else if (scanState is WidgetOculto) {
+                    return Container();
+                  }
                   return Container();
-              }
-            return Container();
-            },
-          ),
-        ),
+                },
+              ),
+            ),
           ),
         ],
       ),

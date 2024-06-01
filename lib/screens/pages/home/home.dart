@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:veo_veo/screens/pages/logros/logros.dart';
+import 'package:veo_veo/screens/pages/mapa/mapa.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
-import 'package:veo_veo/screens/pages/scan/scan.dart';
 
 class HomePage extends StatefulWidget {
   final int interfazInicial;
@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   late int _paginaActual;
   final List<Widget> _paginas = [
     LogrosPage(),
-    ScanPage(),
+    MapaPage(),
     PerfilPage(),
   ];
 
