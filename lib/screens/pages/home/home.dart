@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Veo Veo'),
+        automaticallyImplyLeading: false,  
       ),
       body: _paginas[_paginaActual],
       bottomNavigationBar: BottomNavigationBar(

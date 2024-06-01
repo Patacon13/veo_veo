@@ -53,6 +53,7 @@ class _PerfilConfigPageState extends State<PerfilConfigPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Configurar Perfil'),
+        automaticallyImplyLeading: false,  
       ),
         body: BlocProvider(
         create: (context) => bloc,

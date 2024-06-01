@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:veo_veo/models/punto_de_interes.dart';
 import 'package:veo_veo/services/punto_de_interes_service.dart';
 part 'mapa_event.dart';
 part 'mapa_state.dart';
@@ -53,17 +53,13 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
   Future<FutureOr<void>> _onPuntosSolicitados(PuntosSolicitados event, Emitter<MapaState> emit) async {
     emit(Cargando());
     PuntoDeInteresService controller = PuntoDeInteresService();
-    List<DocumentSnapshot<Object?>>? documentos = await controller.getPuntosDeInteres();
+    List<PuntoDeInteres> puntos = await controller.getPuntosDeInteres();
     List<LatLng> nuevasCoordenadas = [];
-    if (documentos != null) {
-      for (var doc in documentos) {
-        GeoPoint geoPoint = doc.get('ubicacion');
-        LatLng latLng = LatLng(geoPoint.latitude, geoPoint.longitude);
-        nuevasCoordenadas.add(latLng);
+      for (var punto in puntos) {
+        nuevasCoordenadas.add(punto.ubicacion as LatLng);
       }
-   }
-  LocationData ubicacion = await Location().getLocation();
-  emit(PuntosCargados(coordenadas: nuevasCoordenadas, posicionInicial: ubicacion));
+    LocationData ubicacion = await Location().getLocation();
+    emit(PuntosCargados(coordenadas: nuevasCoordenadas, posicionInicial: ubicacion));
   }
 
 
