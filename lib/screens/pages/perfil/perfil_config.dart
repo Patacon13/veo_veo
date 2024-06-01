@@ -50,10 +50,37 @@ class _PerfilConfigPageState extends State<PerfilConfigPage> {
     }
   }
 
+   Future<bool> _onWillPop() async {
+    if(!widget.volverAtras){
+      return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Completa el registro.'),
+            content: const Text('Por favor, completa el registro antes de salir.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Aceptar'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+            ],
+          );
+        },
+      ) ?? false;
+    } else {
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bloc.userProvider = Provider.of<UsuarioManager>(context);
-    return Scaffold(
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
       appBar: AppBar(
         title: const Text('Configurar Perfil'),
         automaticallyImplyLeading: widget.volverAtras,  
@@ -91,6 +118,7 @@ class _PerfilConfigPageState extends State<PerfilConfigPage> {
           return Container();
         },
       ),
+    ),
     ),
     ),
     );    

@@ -32,9 +32,18 @@ Future<void> _onLoginIniciado(LoginIniciado event, Emitter<LoginState> emit) asy
             final user = await auth.signInWithCredential(credential);
             if (!completer.isCompleted) completer.complete();
             if(user.additionalUserInfo!.isNewUser){
-              emit(RegistroExitoso());
+                await _userProvider.registrar(user.user!.uid, telefono);
+                emit(RegistroExitoso());
+                close();
             } else {
-              emit(LoginExitoso());
+              await _userProvider.loguear(user.user!.uid); 
+              if(_userProvider.user!.regCompletado){
+                emit(LoginExitoso());
+                close();
+              } else {
+                emit(RegistroExitoso());
+                close();
+              }
             }
           } catch (e) {
             if (!completer.isCompleted) completer.complete();
@@ -75,17 +84,22 @@ Future<void> _onLoginIniciado(LoginIniciado event, Emitter<LoginState> emit) asy
       if(user.additionalUserInfo!.isNewUser){
         await _userProvider.registrar(user.user!.uid, event.telefono);
         emit(RegistroExitoso());
+        close();
       } else {
         await _userProvider.loguear(user.user!.uid); 
         if(_userProvider.user!.regCompletado){
           emit(LoginExitoso());
         } else {
           emit(RegistroExitoso());
+          close();
         }
       }
     } catch (e) {
       emit(CodigoIncorrecto());
     }
   }
+
+
+
 
 }

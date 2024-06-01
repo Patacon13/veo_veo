@@ -21,21 +21,43 @@ class _VerificacionPageState extends State<VerificacionPage> {
     });
   }
 
+ Future<bool> _onWillPop() async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Completa la verificación.'),
+          content: const Text('Por favor, ingresa el código de verificación antes de salir.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+          ],
+        );
+      },
+    ) ?? false;
+  }
+
   @override
   void dispose() {
-    widget.bloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Veo Veo'),
-        automaticallyImplyLeading: false,
-      ),
-      body: BlocProvider(
-        create: (context) => widget.bloc,
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Veo Veo'),
+          automaticallyImplyLeading: false,
+        ),
+        body: BlocProvider(
+          create: (context) => widget.bloc,
           child: BlocBuilder<LoginBloc, LoginState>(
             builder: (context, state) {
               return Container(
@@ -90,6 +112,7 @@ class _VerificacionPageState extends State<VerificacionPage> {
             },
           ),
         ),
+      ),
     );
   }
 
@@ -114,14 +137,14 @@ class _VerificacionPageState extends State<VerificacionPage> {
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           counterText: '',
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Theme.of(context).primaryColor),
           ),
         ),
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 20,  // Tamaño de fuente reducido
           fontWeight: FontWeight.bold,
           color: Colors.black,

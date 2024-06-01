@@ -26,7 +26,7 @@ class _CountryPickerWidgetState extends State<CountryPickerWidget> {
     return GestureDetector(
       onTap: _showCountryPickerDialog,
       child: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(8.0),
@@ -34,7 +34,7 @@ class _CountryPickerWidgetState extends State<CountryPickerWidget> {
         child: Row(
           children: <Widget>[
             CountryPickerUtils.getDefaultFlagImage(_selectedCountry),
-            SizedBox(width: 8.0),
+            SizedBox(width: 1.0),
             Icon(Icons.arrow_drop_down),
           ],
         ),

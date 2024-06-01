@@ -10,9 +10,9 @@ import 'package:veo_veo/screens/pages/login/bloc/login_bloc.dart';
 import 'package:veo_veo/screens/pages/login/verificacion.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil_config.dart';
 
-import '../../widgets/country_picker_widget.dart';
+import 'widgets/country_picker_widget.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatefulWidget with WidgetsBindingObserver {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -49,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        automaticallyImplyLeading: false,  
       ),
       body: BlocProvider(
         create: (context) => _bloc,
@@ -92,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         CountryPickerWidget(
                           onCountrySelected: _handleCountrySelected,
                         ), // Country picker widget
-                        SizedBox(width: 1), // Spacer between country picker and text field
+                        SizedBox(width: 8), // Spacer between country picker and text field
                         Expanded(
                           flex: 1,
                           child: TextField(
@@ -147,4 +148,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  
 }
+
