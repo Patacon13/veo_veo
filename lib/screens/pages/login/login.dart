@@ -16,12 +16,18 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String _telefono = '';
-  final LoginBloc _bloc = LoginBloc();
+  late LoginBloc _bloc;
 
   void _handleInputChanged(String value) {
     setState(() {
       _telefono = value;
     });
+  }
+
+  @override
+  void initState() {
+    _bloc = LoginBloc();
+    super.initState();
   }
 
   @override

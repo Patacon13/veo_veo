@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:veo_veo/providers/user_provider.dart';
 import 'package:veo_veo/screens/pages/logros/logros.dart';
 import 'package:veo_veo/screens/pages/mapa/mapa.dart';
 import 'package:veo_veo/screens/pages/perfil/perfil.dart';
@@ -34,7 +36,7 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,  
         actions: _paginaActual == 2 ? [ //si la interfaz es el perfil agrego la configuracion ahi
                 IconButton(
-                  icon: Icon(Icons.settings),
+                  icon: const Icon(Icons.settings),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -42,6 +44,13 @@ class _HomePageState extends State<HomePage> {
                         builder: (context) => PerfilConfigPage(volverAtras: true),
                       ),
                     );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  onPressed: () {
+                    final userProvider = Provider.of<UsuarioManager>(context, listen: false);
+                    userProvider.signout();
                   },
                 ),
               ]
