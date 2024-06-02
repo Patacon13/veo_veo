@@ -3,11 +3,34 @@ import 'package:provider/provider.dart';
 import 'package:veo_veo/models/usuario.dart';
 import 'package:veo_veo/providers/user_provider.dart';
 
-class PerfilPage extends StatelessWidget {
+class PerfilPage extends StatefulWidget {
+  @override
+  _PerfilPageState createState() => _PerfilPageState();
+}
+
+class _PerfilPageState extends State<PerfilPage> {
+  final TextEditingController _telefonoController = TextEditingController();
+  final TextEditingController _ciudadController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final userProvider = Provider.of<UsuarioManager>(context, listen: false);
+    Usuario? usuario = userProvider.user;
+    _telefonoController.text = usuario?.numeroTelefono ?? '';
+    _ciudadController.text = usuario?.localidad ?? '';
+  }
+
+  @override
+  void dispose() {
+    _telefonoController.dispose();
+    _ciudadController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16),
@@ -65,8 +88,6 @@ class PerfilPage extends StatelessWidget {
   }
 
   Widget _buildProfileDetails(BuildContext context) {
-    final userProvider1 = Provider.of<UsuarioManager>(context, listen: false);
-    Usuario? usuario = userProvider1.user;
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
@@ -89,12 +110,22 @@ class PerfilPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.phone, color: Colors.teal),
               title: const Text('Teléfono'),
-              subtitle: Text(usuario!.numeroTelefono),
+              subtitle: TextField(
+                controller: _telefonoController,
+                decoration: const InputDecoration(
+                  hintText: 'Introduce tu teléfono',
+                ),
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.location_city, color: Colors.teal),
               title: const Text('Ciudad'),
-              subtitle: Text(usuario.localidad),
+              subtitle: TextField(
+                controller: _ciudadController,
+                decoration: const InputDecoration(
+                  hintText: 'Introduce tu ciudad',
+                ),
+              ),
             ),
           ],
         ),
@@ -119,7 +150,3 @@ class PerfilPage extends StatelessWidget {
     );
   }
 }
-
-
-
-
