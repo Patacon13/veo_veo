@@ -13,18 +13,34 @@ class ScanPage extends StatefulWidget {
   _ScanPageState createState() => _ScanPageState();
 }
 
-class _ScanPageState extends State<ScanPage> {
+class _ScanPageState extends State<ScanPage> with TickerProviderStateMixin {
   late ScanBloc bloc;
   CameraController? _cameraController;
   Future<void>? _initializeControllerFuture;
+  
+  late AnimationController _recuadroAnimationController;
+  late AnimationController _iconoAnimationController;
+  late AnimationController _fadeController;
 
   @override
   void initState() {
     super.initState();
     bloc = ScanBloc();
     _initializeCamera();
-  }
 
+    _recuadroAnimationController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    _iconoAnimationController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    _fadeController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+  }
 
   Future<void> _initializeCamera() async {
     final cameras = await availableCameras();
@@ -58,6 +74,9 @@ class _ScanPageState extends State<ScanPage> {
   void dispose() {
     _cameraController?.dispose();
     bloc.close();
+    _recuadroAnimationController.dispose();
+    _iconoAnimationController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -82,10 +101,10 @@ class _ScanPageState extends State<ScanPage> {
           ),
           Center(
             child: Container(
-              width: 300,
-              height: 300,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.green, width: 3),
+              width: MediaQuery.of(context).size.width - 50,
+              height: MediaQuery.of(context).size.height - 150,
+              child: CustomPaint(
+                painter: BorderPainter(_recuadroAnimationController),
               ),
             ),
           ),
@@ -118,6 +137,14 @@ class _ScanPageState extends State<ScanPage> {
               child: BlocBuilder<ScanBloc, ScanState>(
                 builder: (context, scanState) {
                   if (scanState is PuntoDetectado) {
+                    _recuadroAnimationController.reset();
+                    _iconoAnimationController.reset();
+                    _fadeController.reset();
+                    _recuadroAnimationController.forward().whenComplete(() {
+                      _iconoAnimationController.forward().whenComplete(() {
+                        _fadeController.forward();
+                      });
+                    });
                     return Center(child: _widgetDetectado(scanState));
                   } else if (scanState is PuntoNoDetectado) {
                     return Center(child: _widgetNoDetectado());
@@ -139,24 +166,54 @@ class _ScanPageState extends State<ScanPage> {
   }
 
   Widget _widgetDetectado(PuntoDetectado scanState) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 420.0),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(Icons.check, size: 48.0, color: Color.fromARGB(255, 92, 196, 96)),
-            const SizedBox(height: 16.0),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                '${scanState.punto.nombre} detectado correctamente! :D. Redireccionando...',
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.green, fontSize: 20.0),
+    return FadeTransition(
+      opacity: _fadeController,
+      child: AnimatedBuilder(
+        animation: _iconoAnimationController,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: Tween<double>(begin: 0.5, end: 1.0).animate(
+              CurvedAnimation(
+                parent: _iconoAnimationController,
+                curve: Curves.elasticOut,
               ),
+            ).value,
+            child: Transform.rotate(
+              angle: Tween<double>(begin: -0.5, end: 0.0).animate(
+                CurvedAnimation(
+                  parent: _iconoAnimationController,
+                  curve: Curves.elasticOut,
+                ),
+              ).value,
+              child: child,
             ),
-          ],
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(top: 200.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(Icons.check, size: 96.0, color: Colors.blue),
+                const SizedBox(height: 16.0),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '${scanState.punto.nombre} detectado correctamente!',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'ElegantFont',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -171,7 +228,7 @@ class _ScanPageState extends State<ScanPage> {
           Icon(Icons.close, size: 48.0, color: Colors.red),
           SizedBox(height: 16.0),
           Text(
-            'No se detectó ningún punto de interés :(',
+            'No se detectó nada. Probá de nuevo :(',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.red, fontSize: 20.0),
           ),
@@ -189,11 +246,46 @@ class _ScanPageState extends State<ScanPage> {
           Icon(Icons.close, size: 48.0, color: Colors.red),
           SizedBox(height: 16.0),
           Text(
-            'Ocurrio un error al procesar la imagen. :(',
+            'Ocurrio un error al detectar el punto. :(',
             style: TextStyle(color: Colors.red, fontSize: 20.0),
           ),
         ],
       ),
     );
+  }
+}
+
+class BorderPainter extends CustomPainter {
+  final Animation<double> animation;
+
+  BorderPainter(this.animation) : super(repaint: animation);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.blue
+      ..strokeWidth = 5.0
+      ..style = PaintingStyle.stroke;
+
+    final path = Path();
+    double progress = animation.value * 4;
+
+    if (progress < 1) {
+      path.moveTo(progress * size.width, 0);
+      path.lineTo(0, 0);
+    } else if (progress < 2) {
+      path.moveTo(size.width, 0);
+      path.lineTo(size.width, (progress - 1) * size.height);
+    } else if (progress < 3) {
+      path.moveTo(size.width, size.height);
+      path.lineTo(size.width - (progress - 2) * size.width, size.height);
+    } 
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
