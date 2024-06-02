@@ -36,7 +36,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
           if(coincidencia > 0.05){
             Usuario? usuario = _userProvider.user;
             PuntoDeInteres puntoDeInteres = await puntoService.getPuntoDeInteres(punto);
-            await usuarioService.registrarLogro(usuario!.id, punto);
+            await usuarioService.registrarLogro(usuario!.id, punto); 
             emit(PuntoDetectado(punto: puntoDeInteres));
           } else {
             emit(PuntoNoDetectado());
