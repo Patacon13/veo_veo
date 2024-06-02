@@ -39,22 +39,11 @@ class _LogrosPageState extends State<LogrosPage> {
           SliverAppBar(
             expandedHeight: 150.0,
             floating: false,
+            automaticallyImplyLeading: false,     
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               titlePadding: EdgeInsets.only(left: 0, bottom: 16),
-              title: Container(
-                width: double.infinity,
-                alignment: Alignment.bottomCenter,
-                child: Text(
-                  "Mis Logros",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
               background: Image.network(
                 'https://firebasestorage.googleapis.com/v0/b/veo-veo-9d124.appspot.com/o/misLogros%2Fsanta-fe-logo.jpg?alt=media&token=42786737-7de2-4af7-89b6-523685081252', // Ejemplo de imagen de Unsplash
                 fit: BoxFit.cover,
