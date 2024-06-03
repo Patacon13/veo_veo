@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
@@ -58,128 +56,138 @@ class _SubirFotoPDIPageState extends State<SubirFotoPDIPage> {
         return false;
       },
       child: Scaffold(
+        backgroundColor: Colors.blue[50],
         appBar: AppBar(
           title: Text('Cargar foto de ${widget.punto?.nombre ?? ''}'),
           automaticallyImplyLeading: false,
         ),
-        body: Stack(
-          children: [
-            Center(
+        body: SingleChildScrollView(
+          child: Center(
+                        child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * 0.015),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Felicitaciones! Ahora compartí una foto actual del lugar que descubriste',
-                      style: TextStyle(fontSize: 18, color: Colors.black),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 20),
-                    _imagen == null
-                        ? const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.photo_camera,
-                                size: 100,
-                                color: Colors.grey,
-                              ),
-                              SizedBox(height: 20),
-                              Text(
-                                'No se ha seleccionado una imagen.',
-                                style: TextStyle(fontSize: 18, color: Colors.grey),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.file(
-                              _imagen!,
-                              width: double.infinity,
-                              height: 300,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                    const SizedBox(height: 30),
-                    ElevatedButton.icon(
-                      onPressed: () => _takePicture(context),
-                      icon: const Icon(Icons.camera_alt),
-                      label: const Text('Tomar Foto'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                        textStyle: const TextStyle(fontSize: 18),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
+                padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.15),
+                child: Card(
+                  color: Colors.white,
+                  elevation: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        const Text(
+                          'Felicitaciones! Ahora compartí una foto actual del lugar que descubriste',
+                          style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        _imagen == null
+                            ? const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.photo_camera,
+                                    size: 100,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    'No se ha seleccionado una imagen.',
+                                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.file(
+                                  _imagen!,
+                                  width: double.infinity,
+                                  height: 300,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                        const SizedBox(height: 30),
                         ElevatedButton.icon(
-                          onPressed: _imagen == null ? null : _subirImagen,
-                          icon: const Icon(Icons.upload),
-                          label: const Text('Subir Foto'),
+                          onPressed: () => _takePicture(context),
+                          icon: const Icon(Icons.camera_alt),
+                          label: const Text('Tomar Foto'),
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                             textStyle: const TextStyle(fontSize: 18),
                           ),
                         ),
-                        const SizedBox(width: 20),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => HomePage(interfazInicial: 0)),
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.blue, 
-                            textStyle: const TextStyle(fontSize: 18),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: _imagen == null ? null : _subirImagen,
+                              icon: const Icon(Icons.upload),
+                              label: const Text('Subir Foto'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                textStyle: const TextStyle(fontSize: 18),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => HomePage(interfazInicial: 0)),
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.blue, 
+                                textStyle: const TextStyle(fontSize: 18),
+                              ),
+                              child: const Text('Omitir'),
+                            ),
+                          ],
+                        ),
+                        BlocProvider(
+                          create: (context) => bloc,
+                          child: BlocListener<SubirFotoPDIBloc, SubirFotoPDIState>(
+                            listener: (context, state) {
+                              if (state is ImagenCargadaCorrectamente) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => HomePage(interfazInicial: 0)),
+                                );
+                              }
+                            },
+                            child: BlocBuilder<SubirFotoPDIBloc, SubirFotoPDIState>(
+                              builder: (context, state) {
+                                if (state is Cargando) {
+                                  return const Center(child: CircularProgressIndicator());
+                                } else if (state is ErrorOcurrido) {
+                                  return const Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.close, size: 48.0, color: Colors.red),
+                                      SizedBox(height: 16.0),
+                                      Text(
+                                        'Ocurrió un error al subir la imagen.',
+                                        style: TextStyle(color: Colors.red, fontSize: 20.0),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
                           ),
-                          child: Text('Omitir'),
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
-            BlocProvider(
-              create: (context) => bloc,
-              child: BlocListener<SubirFotoPDIBloc, SubirFotoPDIState>(
-                listener: (context, state) {
-                  if (state is ImagenCargadaCorrectamente) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage(interfazInicial: 0)),
-                    );
-                  }
-                },
-                child: BlocBuilder<SubirFotoPDIBloc, SubirFotoPDIState>(
-                  builder: (context, state) {
-                    if (state is Cargando) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state is ErrorOcurrido) {
-                      return const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.close, size: 48.0, color: Colors.red),
-                          SizedBox(height: 16.0),
-                          Text(
-                            'Ocurrió un error al subir la imagen.',
-                            style: TextStyle(color: Colors.red, fontSize: 20.0),
-                          ),
-                        ],
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

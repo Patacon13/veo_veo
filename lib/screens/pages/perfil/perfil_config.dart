@@ -80,123 +80,145 @@ class _PerfilConfigPageState extends State<PerfilConfigPage> {
     bloc.userProvider = Provider.of<UsuarioManager>(context);
     // ignore: deprecated_member_use
     return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Configurar Perfil'),
-          automaticallyImplyLeading: widget.volverAtras,
-        ),
-        body: BlocProvider(
-          create: (context) => bloc,
-          child: BlocListener<PerfilConfigBloc, PerfilConfigState>(
-            listener: (context, state) {
-              if (state is DatosCargadosCorrectamente) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HomePage(interfazInicial: 2)),
-                );
+  onWillPop: _onWillPop,
+  child: Scaffold(
+    backgroundColor: Colors.blue[50],
+    appBar: AppBar(
+      title: const Text('Configurar Perfil'),
+      automaticallyImplyLeading: widget.volverAtras,
+    ),
+    body: BlocProvider(
+      create: (context) => bloc,
+      child: BlocListener<PerfilConfigBloc, PerfilConfigState>(
+        listener: (context, state) {
+          if (state is DatosCargadosCorrectamente) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(interfazInicial: 2),
+              ),
+            );
+          }
+        },
+        child: BlocBuilder<PerfilConfigBloc, PerfilConfigState>(
+          builder: (context, state) {
+            if (state is Cargando) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is DatosPreviosCargados) {
+              if (state.usuario != null) {
+                _nombreController.text = state.usuario!.nombre;
+                _apellidoController.text = state.usuario!.apellido;
+                _ciudadController.text = state.usuario!.localidad;
               }
-            },
-            child: BlocBuilder<PerfilConfigBloc, PerfilConfigState>(
-              builder: (context, state) {
-                if (state is Cargando) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is DatosPreviosCargados) {
-                  if (state.usuario != null) {
-                    _nombreController.text = state.usuario!.nombre;
-                    _apellidoController.text = state.usuario!.apellido;
-                    _ciudadController.text = state.usuario!.localidad;
-                  }
-                  return _buildForm(state.usuario);
-                } else if (state is ErrorOcurrido) {
-                  return const Center(
-                    child: Text(
-                      'Ocurrió un error',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  );
-                }
-                return Container();
-              },
+              return SingleChildScrollView(
+                child: _buildForm(state.usuario),
+              );
+            } else if (state is ErrorOcurrido) {
+              return const Center(
+                child: Text(
+                  'Ocurrió un error',
+                  style: TextStyle(color: Colors.red),
+                ),
+              );
+            }
+            return Container();
+          },
+        ),
+      ),
+    ),
+  ),
+);
+}
+
+  Widget _buildForm(Usuario? usuario) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.all(16.0),
+          child: Card(
+            elevation: 5,
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: _pickImage,
+                        child: CircleAvatar(
+                          radius: 70,
+                          backgroundImage: _getImageProvider(usuario),
+                          child: _image == null
+                              ? const Icon(Icons.add_a_photo, size: 50)
+                              : null,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _nombreController,
+                        decoration: const InputDecoration(
+                          labelText: 'Nombre',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingresa tu nombre';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _apellidoController,
+                        decoration: const InputDecoration(
+                          labelText: 'Apellido',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingresa tu apellido';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _ciudadController,
+                        decoration: const InputDecoration(
+                          labelText: 'Ciudad',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingresa tu ciudad';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _submit,
+                        child: const Text('Guardar'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 
-  Widget _buildForm(Usuario? usuario) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              GestureDetector(
-                onTap: _pickImage,
-                child: CircleAvatar(
-                  radius: 70,
-                  backgroundImage: _getImageProvider(usuario),
-                  child: _image == null
-                      ? const Icon(Icons.add_a_photo, size: 50)
-                      : null,
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _nombreController,
-                decoration: InputDecoration(
-                  labelText: 'Nombre',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa tu nombre';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _apellidoController,
-                decoration: InputDecoration(
-                  labelText: 'Apellido',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa tu apellido';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _ciudadController,
-                decoration: InputDecoration(
-                  labelText: 'Ciudad',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa tu ciudad';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submit,
-                child: const Text('Guardar'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   ImageProvider<Object>? _getImageProvider(Usuario? usuario) {
     if (_image != null) {

@@ -45,6 +45,7 @@ class _DetallePDIPageState extends State<DetallePDIPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[50],
       appBar: AppBar(
         title: Text('Detalle de ${widget.detalle?.nombre ?? ''}'),
       ),

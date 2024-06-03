@@ -26,6 +26,7 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[50],
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16),
@@ -49,6 +50,7 @@ class _PerfilPageState extends State<PerfilPage> {
         _mostrarFotoAmpliada(usuario, context);
       },
       child: Card(
+        color: Colors.white,
         elevation: 10,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -85,6 +87,7 @@ class _PerfilPageState extends State<PerfilPage> {
   Widget _buildProfileDetails(BuildContext context) {
     return Card(
       elevation: 5,
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),

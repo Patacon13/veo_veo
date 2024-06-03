@@ -58,10 +58,11 @@ class _TomarFotoState extends State<TomarFoto> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _takePicture(context),
-        child: const Icon(Icons.camera_alt),
-      ),
+floatingActionButton: FloatingActionButton(
+  onPressed: () => _takePicture(context),
+  child: const Icon(Icons.camera_alt),
+),
+floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

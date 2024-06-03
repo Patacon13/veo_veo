@@ -34,12 +34,11 @@ class _LogrosPageState extends State<LogrosPage> {
     Usuario? usuario = userProvider.user;
 
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.blue[50],
       body: Column(
         children: [
           Container(
             height: 150,
-            color: Colors.grey[200],
             width: double.infinity,
             child: Image.asset(
               'assets/portada_logros.jpg', 
@@ -59,7 +58,7 @@ class _LogrosPageState extends State<LogrosPage> {
           ),
           Expanded(
             child: Container(
-              color: Colors.grey[200],
+              color: Colors.blue[50],
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
