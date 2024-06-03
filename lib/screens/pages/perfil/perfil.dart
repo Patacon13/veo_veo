@@ -9,22 +9,17 @@ class PerfilPage extends StatefulWidget {
 }
 
 class _PerfilPageState extends State<PerfilPage> {
-  final TextEditingController _telefonoController = TextEditingController();
-  final TextEditingController _ciudadController = TextEditingController();
+  late Usuario? usuario;
 
   @override
   void initState() {
     super.initState();
     final userProvider = Provider.of<UsuarioManager>(context, listen: false);
-    Usuario? usuario = userProvider.user;
-    _telefonoController.text = usuario?.numeroTelefono ?? '';
-    _ciudadController.text = usuario?.localidad ?? '';
+    usuario = userProvider.user;
   }
 
   @override
   void dispose() {
-    _telefonoController.dispose();
-    _ciudadController.dispose();
     super.dispose();
   }
 
@@ -110,22 +105,13 @@ class _PerfilPageState extends State<PerfilPage> {
             ListTile(
               leading: const Icon(Icons.phone, color: Colors.teal),
               title: const Text('Teléfono'),
-              subtitle: TextField(
-                controller: _telefonoController,
-                decoration: const InputDecoration(
-                  hintText: 'Introduce tu teléfono',
-                ),
+              subtitle: Text(usuario!.numeroTelefono),
               ),
-            ),
             ListTile(
               leading: const Icon(Icons.location_city, color: Colors.teal),
               title: const Text('Ciudad'),
-              subtitle: TextField(
-                controller: _ciudadController,
-                decoration: const InputDecoration(
-                  hintText: 'Introduce tu ciudad',
-                ),
-              ),
+              subtitle: Text(usuario!.localidad),
+
             ),
           ],
         ),
