@@ -33,36 +33,53 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Veo Veo'),
-        automaticallyImplyLeading: false,  
-        actions: _paginaActual == 2 ? [ //si la interfaz es el perfil agrego la configuracion ahi
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PerfilConfigPage(volverAtras: true),
-                      ),
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.logout),
-                  onPressed: () {
-                    final userProvider = Provider.of<UsuarioManager>(context, listen: false);
-                    userProvider.signout(); //Ver por que cuando recien se inicio sesion, cuando se sale no se redirecciona solo, mientras uso el navigator  
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginPage(),
-                      ),
-                    );
-                  },
-                ),
-              ]
-            : null,
-      ),
+  title: const Row(
+    children: [
+      Text(
+        'VEO VEO',
+        style: TextStyle(
+          fontFamily: 'Roboto', 
+          fontWeight: FontWeight.bold,
+          fontSize: 20, 
+          letterSpacing: 1.5, 
+          color: Colors.blue, 
+        ),
+    ),
+      Padding(
+        padding: EdgeInsets.only(left: 8.0),
+        child: Icon(Icons.remove_red_eye, color: Colors.blue,), 
+        ),
+    ],
+  ),
+  automaticallyImplyLeading: false,  
+  actions: _paginaActual == 2 ? [ // Si la interfaz es el perfil, agrego botones
+    IconButton(
+      icon: const Icon(Icons.settings),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PerfilConfigPage(volverAtras: true),
+          ),
+        );
+      },
+    ),
+    IconButton(
+      icon: const Icon(Icons.logout),
+      onPressed: () {
+        final userProvider = Provider.of<UsuarioManager>(context, listen: false);
+        userProvider.signout(); // destruyo la sesion desde el provider
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginPage(),
+          ),
+        );
+      },
+    ),
+  ]
+  : null,
+),
       body: _paginas[_paginaActual],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _paginaActual,
