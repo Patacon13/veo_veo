@@ -56,7 +56,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
 
 
   Future<Response> compararImagen(File imagen) async {
-    const url = 'http://192.168.100.4:5000/procesar';
+    const url = 'http://18.230.115.174:5000/procesar';
     String base64Image = base64Encode(imagen.readAsBytesSync());
       final response = await post(Uri.parse(url), body: {
       'imagen': 'data:image/jpeg;base64,$base64Image',
