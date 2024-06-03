@@ -34,20 +34,22 @@ class _LogrosPageState extends State<LogrosPage> {
     Usuario? usuario = userProvider.user;
 
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       body: Column(
         children: [
           Container(
             height: 150,
+            color: Colors.grey[200],
             width: double.infinity,
-            child: Image.network(
-              'https://firebasestorage.googleapis.com/v0/b/veo-veo-9d124.appspot.com/o/misLogros%2Fsanta-fe-logo.jpg?alt=media&token=42786737-7de2-4af7-89b6-523685081252', // Ejemplo de imagen de Unsplash
+            child: Image.asset(
+              'assets/portada_logros.jpg', 
               fit: BoxFit.cover,
             ),
           ),
           Container(
             padding: EdgeInsets.symmetric(vertical: 16),
-            child: Text(
-              "Mis Logros",
+            child: const Text(
+              "Puntos descubiertos",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
