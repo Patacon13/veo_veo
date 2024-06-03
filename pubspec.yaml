@@ -36,7 +36,6 @@ dependencies:
   location: ^6.0.1
   camera: ^0.10.5+9  # Actualizado a la versión 0.10.5+9
   image_picker: ^1.0.2
-  tflite_v2: ^1.0.0
   image: ^4.1.7
   cloud_firestore:
   firebase_core:
