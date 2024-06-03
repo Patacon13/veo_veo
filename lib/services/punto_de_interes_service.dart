@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:veo_veo/models/usuario.dart';
 import '../models/punto_de_interes.dart';
+import 'package:image/image.dart' as img;
 
 
 class PuntoDeInteresService {
@@ -47,13 +48,20 @@ class PuntoDeInteresService {
     return lista;
   }
 
-  Future<String> subirImagen(PuntoDeInteres punto, File? imagen, Usuario? user) async {
-    final link = storageRef.child("subidas/${punto.id}_${user!.id}.jpg");
-    final tareaSubir = link.putFile(imagen!);
-    await tareaSubir.whenComplete(() => null); 
-    final url = await link.getDownloadURL(); 
-    return url; 
-  } 
+Future<String> subirImagen(PuntoDeInteres punto, File? imagen, Usuario? user) async {
+  final bytes = imagen!.readAsBytesSync();
+  img.Image? image = img.decodeImage(bytes);
+  final jpg = img.encodeJpg(image!, quality: 85);
+  final tempDir = Directory.systemTemp;
+  final tempFile = File('${tempDir.path}/${punto.id}_${user!.id}.jpg');
+  tempFile.writeAsBytesSync(jpg);
+  final link = storageRef.child("subidas/${punto.id}_${user.id}.jpg");
+  final tareaSubir = link.putFile(tempFile);
+  await tareaSubir.whenComplete(() => null);
+  final url = await link.getDownloadURL();
+  tempFile.deleteSync();
+  return url;
+}
 
 Future<List<String>> obtenerFotosUsuariosPDI(PuntoDeInteres punto) async {
     Reference directorio = storageRef.child('subidas/');
