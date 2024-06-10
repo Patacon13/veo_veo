@@ -64,7 +64,7 @@ Future<String> subirImagen(PuntoDeInteres punto, File? imagen, Usuario? user) as
 }
 
 Future<List<String>> obtenerFotosUsuariosPDI(PuntoDeInteres punto) async {
-    Reference directorio = storageRef.child('subidas/');
+    Reference directorio = storageRef.child('pendientes_verificacion/');
     return _obtenerFotos(directorio, punto);
 }
 

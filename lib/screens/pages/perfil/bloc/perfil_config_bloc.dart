@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:veo_veo/models/usuario.dart';
 import 'package:veo_veo/providers/user_provider.dart';
+import 'package:veo_veo/services/usuario_services.dart';
 
 part 'perfil_config_event.dart';
 part 'perfil_config_state.dart';
@@ -32,8 +33,14 @@ class PerfilConfigBloc extends Bloc<PerfilConfigEvent, PerfilConfigState>{
     }
   }
 
-  FutureOr<void> _onDatosPreviosRequeridos(DatosPreviosRequeridos event, Emitter<PerfilConfigState> emit) {
+  FutureOr<void> _onDatosPreviosRequeridos(DatosPreviosRequeridos event, Emitter<PerfilConfigState> emit) async {
+    emit(Cargando());
     Usuario? actual  = _userProvider.user;
-    emit(DatosPreviosCargados(usuario: actual));
+    if(!event.tycReq){
+      emit(DatosPreviosCargados(usuario: actual));
+    } else {
+      String tycContenido = await UsuarioService().obtenerTyC();
+      emit(DatosPreviosCargados(usuario: actual, tyc: tycContenido));
+    }
   }
 }

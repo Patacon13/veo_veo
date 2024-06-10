@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:veo_veo/models/punto_de_interes.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -53,6 +54,8 @@ Future<Usuario> getUsuario(String id) async {
   }
 }
 
+
+
 Future<bool> registrarLogro(String idUsuario, String idPuntoDeInteres) async {
     try {
       DocumentReference usuarioRef = usuariosColeccion.doc(idUsuario);
@@ -65,6 +68,8 @@ Future<bool> registrarLogro(String idUsuario, String idPuntoDeInteres) async {
       throw Exception('Error al registrar el logro: $e');
     }
   }
+
+
 
 agregarUsuarioInicial(String uid, String telefono) async {
   try {
@@ -98,6 +103,11 @@ Future<String> actualizarFotoPerfil(File imagen, String id) async {
   return url; 
 }
 
+Future<String> obtenerTyC() async {
+  Reference archivo = FirebaseStorage.instance.ref().child('legal/tyc.html');
+  final Uint8List? data = await archivo.getData();
+  return String.fromCharCodes(data!);
+}
 
 
 

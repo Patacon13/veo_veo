@@ -8,7 +8,8 @@ final class PerfilConfigInicial extends PerfilConfigState{}
 
 final class DatosPreviosCargados extends PerfilConfigState{
   late final Usuario? usuario;
-  DatosPreviosCargados({required this.usuario});
+  late final String? tyc;
+  DatosPreviosCargados({required this.usuario, this.tyc});
 }
 
 final class Cargando extends PerfilConfigState{}

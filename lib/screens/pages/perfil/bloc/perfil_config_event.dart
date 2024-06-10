@@ -10,4 +10,7 @@ final class DatosEnviados extends PerfilConfigEvent{
   DatosEnviados({required this.usuario, required this.foto});
 }
 
-final class DatosPreviosRequeridos extends PerfilConfigEvent{}
+final class DatosPreviosRequeridos extends PerfilConfigEvent{
+  late final bool tycReq;
+  DatosPreviosRequeridos({required this.tycReq});
+}
