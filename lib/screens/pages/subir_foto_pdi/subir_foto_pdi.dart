@@ -152,9 +152,26 @@ class _SubirFotoPDIPageState extends State<SubirFotoPDIPage> {
                           child: BlocListener<SubirFotoPDIBloc, SubirFotoPDIState>(
                             listener: (context, state) {
                               if (state is ImagenCargadaCorrectamente) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => HomePage(interfazInicial: 0)),
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text("¡Gracias por tu contribución!"),
+                                      content: const Text("Tu foto está siendo revisada y será publicada cuando sea aceptada."),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => HomePage(interfazInicial: 0)),
+                                            ); 
+                                          },
+                                          child: const Text("De acuerdo!"),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
                               }
                             },
